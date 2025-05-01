@@ -1,9 +1,31 @@
-import { ApplicationConfig, provideZoneChangeDetection } from '@angular/core';
-import { provideRouter } from '@angular/router';
-
-import { routes } from './app.routes';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { BrowserAnimationsModule, provideAnimations } from '@angular/platform-browser/animations';
+import { ApplicationConfig, importProvidersFrom } from '@angular/core';
+import { provideZoneChangeDetection }            from '@angular/core';
+import { provideRouter }                        from '@angular/router';
 import { provideClientHydration, withEventReplay } from '@angular/platform-browser';
+import { HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromDi }   from '@angular/common/http';
+import { routes }             from './app.routes';
+import { AuthInterceptor }    from './core/interceptors/auth.interceptor';
 
 export const appConfig: ApplicationConfig = {
-  providers: [provideZoneChangeDetection({ eventCoalescing: true }), provideRouter(routes), provideClientHydration(withEventReplay())]
+  providers: [
+    // Mantém a detecção de zona otimizada
+    provideZoneChangeDetection({ eventCoalescing: true }),
+
+    // Roteamento
+    provideRouter(routes),
+
+    // Hydration (opcional, se usar server-side rendering)
+    provideClientHydration(withEventReplay()),
+    // HTTP Client + nosso AuthInterceptor
+    provideHttpClient(withInterceptorsFromDi()),
+
+    // agora registrar o seu interceptor como provider
+    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
+
+    // animações + Material
+    provideAnimations(),
+    importProvidersFrom(BrowserAnimationsModule, MatSnackBarModule)
+  ]
 };
