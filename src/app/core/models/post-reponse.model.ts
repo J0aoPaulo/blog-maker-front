@@ -3,7 +3,7 @@ export interface PostResponse {
   content: string;
   createdAt: string;
   updatedAt: string;
-  themeDescription?: string;
-  userName: string;
+  theme?: string;
+  name: string;
   userRole: string;
 }
