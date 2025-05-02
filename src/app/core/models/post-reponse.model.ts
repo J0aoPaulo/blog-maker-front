@@ -6,4 +6,5 @@ export interface PostResponse {
   theme?: string;
   name: string;
   userRole: string;
+  userPhoto: string;
 }

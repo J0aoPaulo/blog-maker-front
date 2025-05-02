@@ -1,1 +1,6 @@
 @import "tailwindcss";
+
+.avatar-placeholder {
+  @apply w-6 h-6 rounded-full flex items-center justify-center
+         bg-indigo-100 text-indigo-600 text-[10px] font-semibold uppercase;
+}
