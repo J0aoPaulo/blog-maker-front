@@ -1,0 +1,39 @@
+<div class="max-w-xl mx-auto p-6 space-y-6">
+  <h2 class="text-2xl font-bold">
+    {{ isEdit ? 'Editar Post' : 'Novo Post' }}
+  </h2>
+
+  <form [formGroup]="form" (ngSubmit)="save()" class="space-y-4">
+    <div>
+      <label class="block text-sm font-medium">Título</label>
+      <input formControlName="title" type="text"
+             class="border rounded w-full mt-1 p-2"/>
+      <small *ngIf="form.controls.title.invalid && form.controls.title.touched"
+             class="text-red-600 text-xs">Informe ao menos 5 caracteres</small>
+    </div>
+
+    <div>
+      <label class="block text-sm font-medium">Conteúdo</label>
+      <textarea formControlName="content" rows="6"
+                class="border rounded w-full mt-1 p-2"></textarea>
+      <small *ngIf="form.controls.content.invalid && form.controls.content.touched"
+             class="text-red-600 text-xs">Mínimo de 20 caracteres</small>
+    </div>
+
+    <!-- selects de tema/usuário podem vir aqui -->
+
+    <div class="flex items-center gap-4">
+      <button type="submit"
+              [disabled]="form.invalid"
+              class="bg-indigo-600 text-white px-4 py-2 rounded disabled:opacity-40">
+        {{ isEdit ? 'Atualizar' : 'Publicar' }}
+      </button>
+
+      <!-- Usando routerLink no template -->
+      <a [routerLink]="['/posts']"
+         class="text-sm text-gray-500 hover:underline">
+        Cancelar
+      </a>
+    </div>
+  </form>
+</div>
