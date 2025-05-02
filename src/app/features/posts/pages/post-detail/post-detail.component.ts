@@ -14,9 +14,22 @@ export class PostDetailComponent implements OnInit {
   post?: PostResponse;
   private route = inject(ActivatedRoute);
   private svc   = inject(PostService);
+  private router = inject(Router);
+
+  placeholderUrl = 'https://via.placeholder.com/48?text=?';
 
   ngOnInit() {
     const id = Number(this.route.snapshot.paramMap.get('id'));
     this.svc.getById(id).subscribe(p => this.post = p);
+  }
+
+  onImgError(event: Event) {
+    (event.target as HTMLImageElement).src = this.placeholderUrl;
+  }
+
+  editPost() {
+    if (this.post) {
+      this.router.navigate(['/posts', this.post.id, 'edit']);
+    }
   }
 }
