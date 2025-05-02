@@ -4,6 +4,7 @@
     bg-white border border-gray-200 rounded-2xl
     shadow-sm hover:shadow-md transition-shadow duration-300
     p-6 flex flex-col gap-4
+    h-full            <!-- ocupa 100% da célula -->
   "
 >
   <div class="flex items-center gap-3">
@@ -26,7 +27,9 @@
     </div>
     <div>
       <p class="text-sm font-medium text-gray-800">{{ post.name }}</p>
-      <time class="text-xs text-gray-500">{{ post.createdAt | date:'dd/MM/yyyy' }}</time>
+      <time class="text-xs text-gray-500">
+        {{ post.createdAt | date:'dd/MM/yyyy' }}
+      </time>
     </div>
   </div>
 
@@ -41,7 +44,7 @@
     {{ post.title }}
   </h3>
 
-  <p class="text-gray-700 text-sm line-clamp-3">
+  <p class="text-gray-700 text-sm line-clamp-3 flex-grow">
     {{ post.content | slice:0:200 }}…
   </p>
 
@@ -50,6 +53,7 @@
       mt-auto text-indigo-600 hover:text-indigo-800
       font-medium text-sm self-start
     "
+    [routerLink]="['/posts', post.id]"
   >
     Ler Mais →
   </button>
