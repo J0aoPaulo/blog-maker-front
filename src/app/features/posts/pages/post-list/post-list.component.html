@@ -1,24 +1,8 @@
-<div class="p-6">
-  <h2 class="text-2xl font-semibold mb-4">Postagens</h2>
-
-  <ng-container *ngIf="posts$ | async as posts; else loading">
-    <div *ngIf="posts.length > 0; else empty" class="grid gap-6">
-      <div *ngFor="let post of posts" class="p-4 bg-white border rounded-lg shadow">
-        <h3 class="text-lg font-bold mb-1">{{ post.title }}</h3>
-        <p class="text-sm text-gray-500 mb-2">
-          Autor: {{ post.name }} · Tema: {{ post.theme || '—' }} ·
-          {{ post.createdAt | date:'dd/MM/yyyy' }}
-        </p>
-        <p class="text-gray-700">{{ post.content }}</p>
-      </div>
-    </div>
-  </ng-container>
-
-  <ng-template #loading>
-    <p>Carregando postagens…</p>
-  </ng-template>
-
-  <ng-template #empty>
-    <p>Nenhum post encontrado.</p>
-  </ng-template>
+<div class="grid gap-6
+            grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4
+            place-items-start">
+  <app-post-card
+    *ngFor="let post of posts$ | async"
+    [post]="post">
+  </app-post-card>
 </div>
