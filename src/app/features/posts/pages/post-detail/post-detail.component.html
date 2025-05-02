@@ -1,0 +1,20 @@
+<div *ngIf="post" class="max-w-2xl mx-auto p-6 space-y-4">
+  <h1 class="text-3xl font-bold">{{ post.title }}</h1>
+
+  <p class="text-sm text-gray-500">
+    {{ post.name }} · {{ post.createdAt | date:'dd MMM, yyyy' }} · Tema: {{ post.theme || '—' }}
+  </p>
+
+  <article class="prose max-w-none">
+    {{ post.content }}
+  </article>
+
+  <div class="pt-6">
+    <a
+      [routerLink]="['/posts']"
+      class="text-indigo-600 hover:text-indigo-800 text-sm"
+    >
+      ← Voltar
+    </a>
+  </div>
+</div>
