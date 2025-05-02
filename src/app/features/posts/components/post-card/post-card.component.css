@@ -1,0 +1,60 @@
+.post-card {
+  @apply bg-white border border-gray-200 rounded-2xl shadow-md
+         overflow-hidden transition-shadow duration-300;
+}
+
+.post-card:hover {
+  @apply shadow-xl;
+}
+
+.post-card__header {
+  @apply flex items-center justify-between px-6 pt-6;
+}
+
+.post-card__title {
+  @apply text-2xl font-semibold text-gray-800
+         hover:text-indigo-600 transition-colors duration-200;
+}
+
+.post-card__badge {
+  @apply text-xs font-medium bg-indigo-100 text-indigo-800
+         px-2.5 py-0.5 rounded-full;
+}
+
+.post-card__meta {
+  @apply flex items-center text-sm text-gray-500 px-6 mt-2 space-x-4;
+}
+
+.post-card__author {
+  @apply font-medium text-gray-700;
+}
+
+.post-card__date {
+  @apply italic;
+}
+
+.post-card__excerpt {
+  @apply text-gray-700 px-6 py-4 line-clamp-3;
+}
+
+.post-card__footer {
+  @apply px-6 pb-6;
+}
+
+.post-card__button {
+  @apply text-indigo-600 hover:text-indigo-800 font-medium text-sm;
+}
+
+.line-clamp-2 {
+  @apply overflow-hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+.line-clamp-3 {
+  @apply overflow-hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+}
