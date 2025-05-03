@@ -1,7 +1,7 @@
 import { Routes } from '@angular/router';
 
 export const routes: Routes = [
-  { path: '', redirectTo: 'posts', pathMatch: 'full' },
+  { path: '', loadComponent: () => import('./features/posts/pages/home/home.component').then(m => m.HomeComponent) },
 
   {
     path: 'posts',
