@@ -1,0 +1,109 @@
+<header class="flex items-center justify-between px-8 py-6 bg-white shadow-sm">
+  <div class="flex items-center gap-4">
+    <img
+      [src]="'/assets/logo-blog-maker.png'"
+      alt="Blog Maker Logo"
+      class="h-10 w-auto"
+      onerror="this.onerror=null; this.src='/assets/logo-blog-maker.png'; if(!this.complete) {this.style.display='none'; document.getElementById('logoText').style.display='block';}"
+    />
+    <span id="logoText" class="text-2xl font-bold tracking-tight text-gray-900">Blog Maker</span>
+  </div>
+  <nav class="flex gap-8 text-gray-700 font-medium">
+    <a routerLink="/" class="hover:text-indigo-600 transition">Home</a>
+    <a routerLink="/posts" class="hover:text-indigo-600 transition">Posts</a>
+    <a routerLink="/about" class="hover:text-indigo-600 transition">Sobre</a>
+  </nav>
+</header>
+
+<main class="max-w-6xl mx-auto px-4 py-10 space-y-16">
+  <section>
+    <h2 class="text-2xl font-bold mb-6">Angular</h2>
+    <div *ngIf="angularPosts.length > 0; else noAngularPosts" class="grid grid-cols-1 md:grid-cols-3 gap-8">
+      <div *ngFor="let post of angularPosts" class="bg-white rounded-xl shadow p-6 flex flex-col gap-3 hover:shadow-lg transition h-full">
+        <span class="inline-block bg-indigo-100 text-indigo-700 text-xs font-semibold rounded-full px-3 py-1">{{ post.theme || 'Sem tema' }}</span>
+        <h3 class="text-lg font-semibold">{{ post.title }}</h3>
+        <p class="text-gray-600 text-sm line-clamp-3 flex-grow">{{ post.content | slice:0:120 }}{{ post.content.length > 120 ? '…' : '' }}</p>
+        <div class="flex items-center gap-2 mt-3">
+          <img [src]="post.userPhoto || 'https://avatar.iran.liara.run/public/48/' + post.name" class="w-8 h-8 rounded-full" alt="Autor" onerror="this.src='https://avatar.iran.liara.run/public/48'"/>
+          <span class="text-xs text-gray-700">{{ post.name }}</span>
+          <span class="text-xs text-gray-400 ml-auto">{{ post.createdAt | date:'dd MMM, yyyy' }}</span>
+        </div>
+        <a [routerLink]="['/posts', post.id]" class="text-indigo-600 hover:text-indigo-800 text-xs font-medium mt-3">Ver detalhes →</a>
+      </div>
+    </div>
+    <ng-template #noAngularPosts>
+      <div class="text-gray-400 italic">Nenhum post sobre Angular encontrado.</div>
+    </ng-template>
+  </section>
+
+  <section>
+    <h2 class="text-2xl font-bold mb-6">Spring Boot</h2>
+    <div *ngIf="springPosts.length > 0; else noSpringPosts" class="grid grid-cols-1 md:grid-cols-3 gap-8">
+      <div *ngFor="let post of springPosts" class="bg-white rounded-xl shadow p-6 flex flex-col gap-3 hover:shadow-lg transition h-full">
+        <span class="inline-block bg-green-100 text-green-700 text-xs font-semibold rounded-full px-3 py-1">{{ post.theme || 'Sem tema' }}</span>
+        <h3 class="text-lg font-semibold">{{ post.title }}</h3>
+        <p class="text-gray-600 text-sm line-clamp-3 flex-grow">{{ post.content | slice:0:120 }}{{ post.content.length > 120 ? '…' : '' }}</p>
+        <div class="flex items-center gap-2 mt-3">
+          <img [src]="post.userPhoto || 'https://avatar.iran.liara.run/public/48/' + post.name" class="w-8 h-8 rounded-full" alt="Autor" onerror="this.src='https://avatar.iran.liara.run/public/48'"/>
+          <span class="text-xs text-gray-700">{{ post.name }}</span>
+          <span class="text-xs text-gray-400 ml-auto">{{ post.createdAt | date:'dd MMM, yyyy' }}</span>
+        </div>
+        <a [routerLink]="['/posts', post.id]" class="text-indigo-600 hover:text-indigo-800 text-xs font-medium mt-3">Ver detalhes →</a>
+      </div>
+    </div>
+    <ng-template #noSpringPosts>
+      <div class="text-gray-400 italic">Nenhum post sobre Spring Boot encontrado.</div>
+    </ng-template>
+  </section>
+
+  <section>
+    <h2 class="text-2xl font-bold mb-6">React</h2>
+    <div *ngIf="reactPosts.length > 0; else noReactPosts" class="grid grid-cols-1 md:grid-cols-3 gap-8">
+      <div *ngFor="let post of reactPosts" class="bg-white rounded-xl shadow p-6 flex flex-col gap-3 hover:shadow-lg transition h-full">
+        <span class="inline-block bg-blue-100 text-blue-700 text-xs font-semibold rounded-full px-3 py-1">{{ post.theme || 'Sem tema' }}</span>
+        <h3 class="text-lg font-semibold">{{ post.title }}</h3>
+        <p class="text-gray-600 text-sm line-clamp-3 flex-grow">{{ post.content | slice:0:120 }}{{ post.content.length > 120 ? '…' : '' }}</p>
+        <div class="flex items-center gap-2 mt-3">
+          <img [src]="post.userPhoto || 'https://avatar.iran.liara.run/public/48/' + post.name" class="w-8 h-8 rounded-full" alt="Autor" onerror="this.src='https://avatar.iran.liara.run/public/48'"/>
+          <span class="text-xs text-gray-700">{{ post.name }}</span>
+          <span class="text-xs text-gray-400 ml-auto">{{ post.createdAt | date:'dd MMM, yyyy' }}</span>
+        </div>
+        <a [routerLink]="['/posts', post.id]" class="text-indigo-600 hover:text-indigo-800 text-xs font-medium mt-3">Ver detalhes →</a>
+      </div>
+    </div>
+    <ng-template #noReactPosts>
+      <div class="text-gray-400 italic">Nenhum post sobre React encontrado.</div>
+    </ng-template>
+  </section>
+
+  <section>
+    <h2 class="text-2xl font-bold mb-6">Posts recentes</h2>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+      <div *ngFor="let post of recentPosts" class="bg-white rounded-xl shadow p-6 flex flex-col gap-3 hover:shadow-lg transition h-full">
+        <span class="inline-block bg-gray-100 text-gray-700 text-xs font-semibold rounded-full px-3 py-1">{{ post.theme || 'Sem tema' }}</span>
+        <h3 class="text-lg font-semibold">{{ post.title }}</h3>
+        <p class="text-gray-600 text-sm line-clamp-3 flex-grow">{{ post.content | slice:0:120 }}{{ post.content.length > 120 ? '…' : '' }}</p>
+        <div class="flex items-center gap-2 mt-3">
+          <img [src]="post.userPhoto || 'https://avatar.iran.liara.run/public/48/' + post.name" class="w-8 h-8 rounded-full" alt="Autor" onerror="this.src='https://avatar.iran.liara.run/public/48'"/>
+          <span class="text-xs text-gray-700">{{ post.name }}</span>
+          <span class="text-xs text-gray-400 ml-auto">{{ post.createdAt | date:'dd MMM, yyyy' }}</span>
+        </div>
+        <a [routerLink]="['/posts', post.id]" class="text-indigo-600 hover:text-indigo-800 text-xs font-medium mt-3">Ver detalhes →</a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<a
+  [routerLink]="['/posts/new']"
+  class="fixed bottom-8 right-8 bg-indigo-600 hover:bg-indigo-700 text-white rounded-full w-16 h-16 flex items-center justify-center shadow-lg transition-colors z-50"
+  title="Criar novo post"
+>
+  <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" viewBox="0 0 20 20" fill="currentColor">
+    <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
+  </svg>
+</a>
+
+<footer class="w-full text-center text-gray-400 text-xs py-6 border-t mt-16">
+  © 2025 Blog Maker. Todos os direitos reservados.
+</footer>
