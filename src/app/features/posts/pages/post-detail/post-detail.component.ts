@@ -32,4 +32,18 @@ export class PostDetailComponent implements OnInit {
       this.router.navigate(['/posts', this.post.id, 'edit']);
     }
   }
+
+  deletePost() {
+    if (this.post && confirm('Tem certeza que deseja excluir este post?')) {
+      this.svc.delete(this.post.id).subscribe({
+        next: () => {
+          this.router.navigate(['/posts']);
+        },
+        error: (err) => {
+          console.error('Erro ao excluir post:', err);
+          alert('Não foi possível excluir o post. Tente novamente mais tarde.');
+        }
+      });
+    }
+  }
 }
