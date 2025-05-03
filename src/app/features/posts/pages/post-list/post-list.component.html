@@ -1,11 +1,36 @@
-<div
-  class="grid gap-6
-         grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4
-         items-stretch    <!-- garante que cada célula estique -->
-         px-4"
->
-  <app-post-card
-    *ngFor="let post of posts$ | async"
-    [post]="post"
-  ></app-post-card>
+<div class="max-w-6xl mx-auto px-4 py-8">
+  <div class="flex justify-between items-center mb-8">
+    <div>
+      <h1 class="text-3xl font-bold text-gray-900">Posts</h1>
+      <p class="text-gray-500 mt-1">Explore os posts da comunidade</p>
+    </div>
+
+    <a
+      [routerLink]="['/posts/new']"
+      class="bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2 px-4 rounded-lg flex items-center gap-2 transition-colors"
+    >
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+        <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
+      </svg>
+      Criar post
+    </a>
+  </div>
+
+  <div class="border-b border-gray-200 mb-8"></div>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+    <app-post-card
+      *ngFor="let post of posts$ | async"
+      [post]="post"
+      class="h-full"
+    ></app-post-card>
+  </div>
+
+  <div *ngIf="(posts$ | async)?.length === 0" class="text-center py-12">
+    <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 mx-auto text-gray-300 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+    </svg>
+    <p class="text-gray-500 text-lg">Nenhum post encontrado</p>
+    <a [routerLink]="['/posts/new']" class="mt-4 inline-block text-indigo-600 hover:text-indigo-800 font-medium">Criar o primeiro post</a>
+  </div>
 </div>
