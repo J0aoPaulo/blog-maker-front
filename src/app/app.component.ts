@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject, PLATFORM_ID } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
+import { isPlatformBrowser } from '@angular/common';
 
 @Component({
   selector: 'app-root',
@@ -10,10 +11,13 @@ import { RouterOutlet } from '@angular/router';
 })
 export class AppComponent implements OnInit {
   title = 'blog-maker-front';
+  private platformId = inject(PLATFORM_ID);
 
   ngOnInit() {
-    // Pré-carrega a imagem do logo para garantir que ela estará no cache do navegador
-    const preloadLogo = new Image();
-    preloadLogo.src = 'assets/logo-blog-maker.png';
+    // Pré-carrega a imagem do logo apenas no navegador
+    if (isPlatformBrowser(this.platformId)) {
+      const preloadLogo = new Image();
+      preloadLogo.src = 'assets/logo-blog-maker.png';
+    }
   }
 }

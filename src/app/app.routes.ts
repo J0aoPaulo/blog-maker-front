@@ -4,6 +4,12 @@ export const routes: Routes = [
   { path: '', loadComponent: () => import('./features/posts/pages/home/home.component').then(m => m.HomeComponent) },
 
   {
+    path: 'analytics',
+    loadComponent: () => import('./features/analytics/analytics-page.component')
+      .then(m => m.AnalyticsPageComponent),
+  },
+
+  {
     path: 'posts',
     loadComponent: () => import('./features/posts/pages/post-list/post-list.component')
       .then(m => m.PostListComponent),

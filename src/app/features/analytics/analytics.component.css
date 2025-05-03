@@ -1,0 +1,17 @@
+canvas {
+  width: 100% !important;
+  height: 100% !important;
+}
+
+input[type="date"],
+select {
+  border: 1px solid #d1d5db;
+  padding: 0.5rem;
+}
+
+input[type="date"]:focus,
+select:focus {
+  outline: none;
+  border-color: #6366f1;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+}
