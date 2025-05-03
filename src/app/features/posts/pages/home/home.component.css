@@ -1,0 +1,36 @@
+html, body {
+  min-height: 100vh;
+  background: #f8fafc;
+}
+
+body {
+  background: #f8fafc;
+}
+
+header {
+  background: #fff;
+  box-shadow: 0 2px 8px 0 rgba(0,0,0,0.03);
+}
+
+main {
+  background: transparent;
+}
+
+section h2 {
+  letter-spacing: -0.5px;
+}
+
+footer {
+  background: #fff;
+  border-top: 1px solid #e5e7eb;
+}
+
+@media (max-width: 768px) {
+  header, main {
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+  }
+  .grid-cols-3 {
+    grid-template-columns: 1fr !important;
+  }
+}
