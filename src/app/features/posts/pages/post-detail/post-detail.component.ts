@@ -1,7 +1,7 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { PostService } from '../../../..//core/services/post.service';
+import { PostService } from '../../../../core/services/post.service';
 import { PostResponse } from '../../../../core/models/post-reponse.model';
 
 @Component({
