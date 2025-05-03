@@ -4,7 +4,7 @@ import { ApplicationConfig, importProvidersFrom } from '@angular/core';
 import { provideZoneChangeDetection }            from '@angular/core';
 import { provideRouter }                        from '@angular/router';
 import { provideClientHydration, withEventReplay } from '@angular/platform-browser';
-import { HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromDi }   from '@angular/common/http';
+import { HTTP_INTERCEPTORS, provideHttpClient, withFetch, withInterceptorsFromDi }   from '@angular/common/http';
 import { routes }             from './app.routes';
 import { AuthInterceptor }    from './core/interceptors/auth.interceptor';
 
@@ -19,7 +19,10 @@ export const appConfig: ApplicationConfig = {
     // Hydration (opcional, se usar server-side rendering)
     provideClientHydration(withEventReplay()),
     // HTTP Client + nosso AuthInterceptor
-    provideHttpClient(withInterceptorsFromDi()),
+    provideHttpClient(
+      withInterceptorsFromDi(),
+      withFetch()       //  ← ADICIONE ISTO
+    ),
 
     // agora registrar o seu interceptor como provider
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
