@@ -3,6 +3,8 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { PostService } from '../../../../core/services/post.service';
+import { ThemeService } from '../../../../core/services/theme.service';
+import { Theme } from '../../../../core/models/theme.model';
 import { CreatePostRequest } from '../../../../core/models/create-post-request.model';
 import { UpdatePostRequest } from '../../../../core/models/update-post-request.model';
 import { HttpErrorResponse } from '@angular/common/http';
@@ -17,10 +19,14 @@ export class PostFormComponent implements OnInit {
   private fb     = inject(FormBuilder);
   private route  = inject(ActivatedRoute);
   private router = inject(Router);
-  private svc    = inject(PostService);
+  private postService = inject(PostService);
+  private themeService = inject(ThemeService);
 
   isEdit = false;
   postId?: number;
+  themes: Theme[] = [];
+  isLoadingThemes = true;
+  errorLoadingThemes = false;
 
   form = this.fb.group({
     title:   ['', [Validators.required, Validators.minLength(5)]],
@@ -30,11 +36,33 @@ export class PostFormComponent implements OnInit {
   });
 
   ngOnInit() {
+    this.loadThemes();
+    this.setupForm();
+  }
+
+  private loadThemes() {
+    this.isLoadingThemes = true;
+    this.errorLoadingThemes = false;
+
+    this.themeService.getAll().subscribe({
+      next: (themes) => {
+        this.themes = themes;
+        this.isLoadingThemes = false;
+      },
+      error: (err) => {
+        console.error('Erro ao carregar temas:', err);
+        this.errorLoadingThemes = true;
+        this.isLoadingThemes = false;
+      }
+    });
+  }
+
+  private setupForm() {
     const id = this.route.snapshot.paramMap.get('id');
     if (id) {
       this.isEdit = true;
       this.postId = +id;
-      this.svc.getById(this.postId).subscribe(p =>
+      this.postService.getById(this.postId).subscribe(p =>
         this.form.patchValue({
           title:   p.title,
           content: p.content,
@@ -61,12 +89,12 @@ export class PostFormComponent implements OnInit {
       const dtoUpdate: UpdatePostRequest = {
         title:   raw.title!,
         content: raw.content!,
-        ...(raw.themeId != null ? { themeId: raw.themeId } : {}),
+        ...(raw.themeId != null ? { themeId: +raw.themeId } : {}),
       };
 
-      this.svc.update(this.postId!, dtoUpdate)
+      this.postService.update(this.postId!, dtoUpdate)
         .subscribe({
-          next: () => this.router.navigate(['/posts']),
+          next: () => this.router.navigate(['/']),
           error: err => console.error('Erro ao atualizar', err)
         });
 
@@ -74,13 +102,13 @@ export class PostFormComponent implements OnInit {
       const dtoCreate: CreatePostRequest = {
         title:   raw.title!,
         content: raw.content!,
-        userId:  raw.userId!,                  
-        ...(raw.themeId != null ? { themeId: raw.themeId } : {}),
+        userId:  raw.userId!,
+        ...(raw.themeId != null ? { themeId: +raw.themeId } : {}),
       };
 
-      this.svc.create(dtoCreate)
+      this.postService.create(dtoCreate)
         .subscribe({
-          next: () => this.router.navigate(['/posts']),
+          next: () => this.router.navigate(['/']),
           error: (err: HttpErrorResponse) => {
             console.error('Erro ao criar', err.error);
             if (err.error?.errors) {
@@ -94,5 +122,10 @@ export class PostFormComponent implements OnInit {
           }
       });
     }
+  }
+
+  getThemeName(themeId: number): string {
+    const theme = this.themes.find(t => t.id === themeId);
+    return theme ? theme.description : 'Sem tema';
   }
 }

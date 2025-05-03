@@ -20,7 +20,26 @@
              class="text-red-600 text-xs">Mínimo de 20 caracteres</small>
     </div>
 
-    <!-- selects de tema/usuário podem vir aqui -->
+    <!-- Seleção de Tema -->
+    <div>
+      <label class="block text-sm font-medium">Tema</label>
+      <div *ngIf="isLoadingThemes" class="text-sm text-gray-500 mt-1">
+        Carregando temas...
+      </div>
+      <div *ngIf="errorLoadingThemes" class="text-sm text-red-500 mt-1">
+        Erro ao carregar temas. Por favor, tente novamente.
+      </div>
+      <select
+        *ngIf="!isLoadingThemes && !errorLoadingThemes"
+        formControlName="themeId"
+        class="border rounded w-full mt-1 p-2 bg-white"
+      >
+        <option [ngValue]="null">Selecione um tema (opcional)</option>
+        <option *ngFor="let theme of themes" [ngValue]="theme.id">
+          {{ theme.description }}
+        </option>
+      </select>
+    </div>
 
     <div class="flex items-center gap-4">
       <button type="submit"
