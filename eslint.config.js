@@ -1,7 +1,7 @@
 {
   "root": true,
   "ignorePatterns": ["projects/**/*"],
-  "overrides": [
+  "overrides" [
     {
       "files": ["*.ts"],
       "extends": [

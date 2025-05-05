@@ -1,23 +1,27 @@
-import { Component, OnInit, inject, PLATFORM_ID } from '@angular/core';
+import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
-import { isPlatformBrowser } from '@angular/common';
+import { HeaderComponent } from './core/components/header/header.component';
+import { ToastComponent } from './shared/components/toast/toast.component';
+import { HttpClientModule } from '@angular/common/http';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet],
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css'],
+  imports: [
+    CommonModule,
+    RouterOutlet,
+    HeaderComponent,
+    ToastComponent,
+    HttpClientModule
+  ],
+  template: `
+    <app-header></app-header>
+    <router-outlet></router-outlet>
+    <app-toast></app-toast>
+  `,
+  styles: [],
 })
-export class AppComponent implements OnInit {
+export class AppComponent {
   title = 'blog-maker-front';
-  private platformId = inject(PLATFORM_ID);
-
-  ngOnInit() {
-    // Pré-carrega a imagem do logo apenas no navegador
-    if (isPlatformBrowser(this.platformId)) {
-      const preloadLogo = new Image();
-      preloadLogo.src = 'assets/logo-blog-maker.png';
-    }
-  }
 }
