@@ -1,0 +1,11 @@
+services:
+  blog-maker-front:
+    container_name: blog-maker-front
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "4000:4000"
+    environment:
+      - NODE_ENV=production
+    restart: unless-stopped
