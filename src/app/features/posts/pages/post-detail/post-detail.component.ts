@@ -3,6 +3,8 @@ import { ActivatedRoute, Router, RouterLink, RouterModule } from '@angular/route
 import { CommonModule } from '@angular/common';
 import { PostService } from '../../../../core/services/post.service';
 import { PostResponse } from '../../../../core/models/post-reponse.model';
+import { AuthService } from '../../../../core/services/auth.service';
+import { ToastService } from '../../../../core/services/toast.service';
 
 @Component({
   selector: 'app-post-detail',
@@ -12,15 +14,44 @@ import { PostResponse } from '../../../../core/models/post-reponse.model';
 })
 export class PostDetailComponent implements OnInit {
   post?: PostResponse;
+  isAuthor = false;
+
   private route = inject(ActivatedRoute);
-  private svc   = inject(PostService);
+  private svc = inject(PostService);
   private router = inject(Router);
+  private authService = inject(AuthService);
+  private toastService = inject(ToastService);
 
   placeholderUrl = 'https://via.placeholder.com/48?text=?';
 
   ngOnInit() {
     const id = Number(this.route.snapshot.paramMap.get('id'));
-    this.svc.getById(id).subscribe(p => this.post = p);
+    this.svc.getById(id).subscribe({
+      next: (post) => {
+        this.post = post;
+        this.checkIfUserIsAuthor();
+      },
+      error: (err) => {
+        console.error('Erro ao carregar post:', err);
+        if (err.status === 403) {
+          this.toastService.error('Você não tem permissão para visualizar este post');
+          this.router.navigate(['/']);
+        } else {
+          this.toastService.error('Erro ao carregar post');
+        }
+      }
+    });
+  }
+
+  private checkIfUserIsAuthor(): void {
+    if (!this.post) return;
+
+    const currentUser = this.authService.getCurrentUser();
+    if (currentUser && this.post.userId === currentUser.email) {
+      this.isAuthor = true;
+    } else {
+      this.isAuthor = false;
+    }
   }
 
   onImgError(event: Event) {
@@ -28,20 +59,33 @@ export class PostDetailComponent implements OnInit {
   }
 
   editPost() {
-    if (this.post) {
-      this.router.navigate(['/posts', this.post.id, 'edit']);
+    if (!this.post) return;
+
+    if (!this.isAuthor) {
+      this.toastService.error('Você não tem permissão para editar este post');
+      return;
     }
+
+    this.router.navigate(['/posts', this.post.id, 'edit']);
   }
 
   deletePost() {
-    if (this.post && confirm('Tem certeza que deseja excluir este post?')) {
+    if (!this.post) return;
+
+    if (!this.isAuthor) {
+      this.toastService.error('Você não tem permissão para excluir este post');
+      return;
+    }
+
+    if (confirm('Tem certeza que deseja excluir este post?')) {
       this.svc.delete(this.post.id).subscribe({
         next: () => {
-          this.router.navigate(['/posts']);
+          this.toastService.success('Post excluído com sucesso');
+          this.router.navigate(['/']);
         },
         error: (err) => {
           console.error('Erro ao excluir post:', err);
-          alert('Não foi possível excluir o post. Tente novamente mais tarde.');
+          this.toastService.error('Não foi possível excluir o post. Tente novamente mais tarde.');
         }
       });
     }
