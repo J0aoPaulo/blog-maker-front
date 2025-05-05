@@ -1,59 +1,164 @@
-# BlogMakerFront
+# Blog Maker Frontend
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.2.10.
+<p align="center">
+  <img src="src/assets/logo-blog-maker.png" alt="Blog Maker Logo" width="250"/>
+</p>
 
-## Development server
+<p align="center">
+  Uma plataforma moderna de blogging desenvolvida com Angular.
+</p>
 
-To start a local development server, run:
+## 📋 Índice
 
-```bash
-ng serve
+- [Visão Geral](#visão-geral)
+- [Tecnologias](#tecnologias)
+- [Estrutura do Projeto](#estrutura-do-projeto)
+- [Funcionalidades](#funcionalidades)
+- [Instalação e Configuração](#instalação-e-configuração)
+- [Uso da Aplicação](#uso-da-aplicação)
+- [Integração com Backend](#integração-com-backend)
+- [Contribuição](#contribuição)
+
+## 🌟 Visão Geral
+
+Blog Maker Frontend é uma aplicação Angular moderna e intuitiva que fornece uma interface de usuário robusta para o sistema de gerenciamento de blog. A aplicação suporta criação, edição e visualização de posts de blog, autenticação de usuários, temas personalizáveis e análise de métricas.
+
+## 🚀 Tecnologias
+
+- **Angular 17**: Framework principal para desenvolvimento de SPA
+- **TypeScript**: Linguagem de programação tipada
+- **TailwindCSS**: Framework CSS utility-first para estilização
+- **RxJS**: Biblioteca para programação reativa
+- **Angular Router**: Sistema de navegação entre páginas
+- **HttpClient**: Módulo para comunicação com APIs RESTful
+- **ESLint/Prettier**: Ferramentas para qualidade de código
+
+## 📁 Estrutura do Projeto
+
+```
+src/app/
+├── core/                    # Funcionalidades centrais da aplicação
+│   ├── components/          # Componentes compartilhados essenciais (header)
+│   ├── guards/              # Guards para proteção de rotas
+│   ├── interceptors/        # Interceptores HTTP (auth)
+│   ├── models/              # Interfaces e tipos
+│   └── services/            # Serviços de dados (auth, post, etc)
+├── features/                # Módulos de funcionalidades
+│   ├── analytics/           # Módulo de analytics
+│   ├── auth/                # Módulo de autenticação (login, registro)
+│   │   └── pages/           # Páginas de autenticação
+│   ├── posts/               # Módulo de posts
+│   │   └── pages/           # Páginas para gerenciamento de posts
+│   └── user/                # Módulo de gerenciamento de usuário
+├── shared/                  # Componentes e utilitários compartilhados
+│   └── components/          # Componentes reutilizáveis (botões, cards, etc)
+└── assets/                  # Recursos estáticos (imagens, ícones)
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+## ✨ Funcionalidades
 
-## Code scaffolding
+### Autenticação
+- Login com JWT
+- Registro de novos usuários
+- Proteção de rotas para usuários autenticados
+- Persistência de sessão
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+### Gerenciamento de Posts
+- Visualização de todos os posts na Home
+- Listagem de posts do usuário em "Meus Posts"
+- Criação de novos posts com editor
+- Edição e exclusão de posts próprios
+- Filtragem de posts por temas
 
+### Analytics
+- Visualização de estatísticas sobre posts
+- Gráficos e métricas de engajamento
+
+### Interface de Usuário
+- Design responsivo para desktop e mobile
+- Navegação intuitiva
+- Feedback visual para ações (toasts)
+- Componentes reutilizáveis e consistentes
+
+## 🔧 Instalação e Configuração
+
+### Pré-requisitos
+
+- Node.js (v18+)
+- npm ou yarn
+
+### Passos para Instalação
+
+1. Clone o repositório:
 ```bash
-ng generate component component-name
+git clone https://github.com/seu-usuario/blog-maker-front.git
+cd blog-maker-front
 ```
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
-
+2. Instale as dependências:
 ```bash
-ng generate --help
+npm install
+# ou com yarn
+yarn install
 ```
 
-## Building
-
-To build the project run:
-
-```bash
-ng build
+3. Configure o ambiente:
+   
+Edite o arquivo `src/environments/environment.ts` para apontar para seu backend:
+```typescript
+export const environment = {
+  production: false,
+  api: 'http://localhost:8080/api/v1'
+};
 ```
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
-
+4. Inicie o servidor de desenvolvimento:
 ```bash
-ng test
+npm run start
+# ou com yarn
+yarn start
 ```
 
-## Running end-to-end tests
+5. Acesse a aplicação em `http://localhost:4200`
 
-For end-to-end (e2e) testing, run:
+## 💻 Uso da Aplicação
 
-```bash
-ng e2e
-```
+### Autenticação
+1. Acesse a página inicial
+2. Clique em "Login" ou "Cadastre-se" para acessar o sistema
+3. Forneça suas credenciais ou crie uma nova conta
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+### Gerenciamento de Posts
+- Acesse "Meus Posts" para visualizar seus próprios posts
+- Clique em "Novo Post" para criar um novo conteúdo
+- Use os botões de edição e exclusão para gerenciar posts existentes
 
-## Additional Resources
+### Analytics
+- Navegue até a seção "Analytics" para visualizar métricas
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+## 🔌 Integração com Backend
+
+O frontend se comunica com o backend Spring Boot através de chamadas de API REST. A integração é gerenciada pelos serviços no diretório `src/app/core/services`, especialmente:
+
+- `auth.service.ts`: Gerencia autenticação e estado do usuário
+- `post.service.ts`: Lida com operações de CRUD para posts
+- `theme.service.ts`: Gerencia categorias de posts
+- `analytics.service.ts`: Obtém estatísticas e métricas
+
+Todas as requisições HTTP são interceptadas pelo `auth.interceptor.ts` que adiciona o token JWT às requisições autenticadas.
+
+## 👥 Contribuição
+
+Contribuições são bem-vindas! Por favor, siga estas etapas:
+
+1. Fork o repositório
+2. Crie um branch para sua feature (`git checkout -b feature/nova-funcionalidade`)
+3. Faça commit das suas alterações (`git commit -m 'Adiciona nova funcionalidade'`)
+4. Push para o branch (`git push origin feature/nova-funcionalidade`)
+5. Abra um Pull Request
+
+---
+
+<p align="center">
+  © 2024 Blog Maker. Desenvolvido como parte do programa Acelera Java.
+</p>
