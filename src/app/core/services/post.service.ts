@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, catchError, of, throwError } from 'rxjs';
 
 import { environment }          from '../../../environments/environment';
 import { CreatePostRequest }    from '../models/create-post-request.model';
@@ -10,11 +10,18 @@ import { PostResponse }         from '../models/post-reponse.model';
 @Injectable({ providedIn: 'root' })
 export class PostService {
   private readonly baseUrl = `${environment.api}/posts`;
+  private debugMode = true; // Habilitando o modo de debug para testar diferentes formatos
 
   constructor(private http: HttpClient) {}
 
-  create(request: CreatePostRequest): Observable<PostResponse> {
-    return this.http.post<PostResponse>(this.baseUrl, request);
+  create(request: CreatePostRequest, themeId?: number) {
+    let params = new HttpParams();
+    if (themeId != null) params = params.set('themeId', themeId.toString());
+
+    console.log(`Enviando requisição para: ${this.baseUrl}${params.toString() ? '?' + params.toString() : ''}`);
+    console.log('Corpo da requisição:', JSON.stringify(request));
+
+    return this.http.post<PostResponse>(this.baseUrl, request, { params });
   }
 
   getById(id: number): Observable<PostResponse> {
@@ -29,6 +36,9 @@ export class PostService {
     let params = new HttpParams();
     if (userId)   { params = params.set('userId', userId); }
     if (themeId)  { params = params.set('themeId', themeId.toString()); }
+
+    console.log(`Enviando requisição de filtragem para: ${this.baseUrl}/filter${params.toString() ? '?' + params.toString() : ''}`);
+
     return this.http.get<PostResponse[]>(`${this.baseUrl}/filter`, { params });
   }
 

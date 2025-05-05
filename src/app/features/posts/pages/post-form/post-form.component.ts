@@ -8,6 +8,8 @@ import { Theme } from '../../../../core/models/theme.model';
 import { CreatePostRequest } from '../../../../core/models/create-post-request.model';
 import { UpdatePostRequest } from '../../../../core/models/update-post-request.model';
 import { HttpErrorResponse } from '@angular/common/http';
+import { AuthService } from '../../../../core/services/auth.service';
+import { ToastService } from '../../../../core/services/toast.service';
 
 @Component({
   selector: 'app-post-form',
@@ -21,6 +23,8 @@ export class PostFormComponent implements OnInit {
   private router = inject(Router);
   private postService = inject(PostService);
   private themeService = inject(ThemeService);
+  private authService = inject(AuthService);
+  private toastService = inject(ToastService);
 
   isEdit = false;
   postId?: number;
@@ -31,8 +35,7 @@ export class PostFormComponent implements OnInit {
   form = this.fb.group({
     title:   ['', [Validators.required, Validators.minLength(5)]],
     content: ['', [Validators.required, Validators.minLength(20)]],
-    themeId: [null as number | null],
-    userId:  [null as string | null]
+    themeId: [null as number | null]
   });
 
   ngOnInit() {
@@ -62,18 +65,34 @@ export class PostFormComponent implements OnInit {
     if (id) {
       this.isEdit = true;
       this.postId = +id;
-      this.postService.getById(this.postId).subscribe(p =>
-        this.form.patchValue({
-          title:   p.title,
-          content: p.content,
-          themeId: p.themeId,
-          userId:  p.userId
-        })
-      );
-    } else {
-      this.form.patchValue({
-        userId: 'd2e57245-7063-4d6e-94d5-2480f44cdba2'
+      this.postService.getById(this.postId).subscribe({
+        next: (post) => {
+          const currentUser = this.authService.getCurrentUser();
+          if (!currentUser || post.userId !== currentUser.id) {
+            this.toastService.error('Você não tem permissão para editar este post');
+            this.router.navigate(['/posts', this.postId]);
+            return;
+          }
+
+          this.form.patchValue({
+            title:   post.title,
+            content: post.content,
+            themeId: post.themeId
+          });
+        },
+        error: (err) => {
+          console.error('Erro ao carregar post para edição:', err);
+          this.toastService.error('Erro ao carregar post para edição');
+          this.router.navigate(['/']);
+        }
       });
+    } else {
+      const currentUser = this.authService.getCurrentUser();
+      if (!currentUser) {
+        this.toastService.error('Você precisa estar logado para criar um post');
+        this.router.navigate(['/login']);
+        return;
+      }
     }
   }
 
@@ -83,34 +102,80 @@ export class PostFormComponent implements OnInit {
       return;
     }
 
+    const currentUser = this.authService.getCurrentUser();
+    if (!currentUser) {
+      this.toastService.error('Você precisa estar logado para gerenciar posts');
+      this.router.navigate(['/login']);
+      return;
+    }
+
     const raw = this.form.value;
 
     if (this.isEdit) {
-      const dtoUpdate: UpdatePostRequest = {
-        title:   raw.title!,
-        content: raw.content!,
-        ...(raw.themeId != null ? { themeId: +raw.themeId } : {}),
-      };
+      this.postService.getById(this.postId!).subscribe({
+        next: (post) => {
+          if (post.userId !== currentUser.id) {
+            this.toastService.error('Você não tem permissão para editar este post');
+            this.router.navigate(['/posts', this.postId]);
+            return;
+          }
 
-      this.postService.update(this.postId!, dtoUpdate)
-        .subscribe({
-          next: () => this.router.navigate(['/']),
-          error: err => console.error('Erro ao atualizar', err)
-        });
+          const dtoUpdate: UpdatePostRequest = {
+            title:   raw.title!,
+            content: raw.content!,
+            ...(raw.themeId != null ? { themeId: +raw.themeId } : {}),
+          };
 
+          this.postService.update(this.postId!, dtoUpdate)
+            .subscribe({
+              next: () => {
+                this.toastService.success('Post atualizado com sucesso!');
+                this.router.navigate(['/posts', this.postId]);
+              },
+              error: err => {
+                console.error('Erro ao atualizar', err);
+                this.toastService.error('Erro ao atualizar o post');
+              }
+            });
+        },
+        error: (err) => {
+          console.error('Erro ao verificar permissões:', err);
+          this.toastService.error('Erro ao verificar permissões');
+        }
+      });
     } else {
-      const dtoCreate: CreatePostRequest = {
-        title:   raw.title!,
-        content: raw.content!,
-        userId:  raw.userId!,
-        ...(raw.themeId != null ? { themeId: +raw.themeId } : {}),
-      };
+      if (!currentUser) {
+        this.toastService.error('Você precisa estar logado para criar um post');
+        this.router.navigate(['/login']);
+        return;
+      }
 
-      this.postService.create(dtoCreate)
+      console.log('Usuário atual para criação:', currentUser);
+
+      const dtoCreate: CreatePostRequest = {
+        title: raw.title!,
+        content: raw.content!,
+        themeId: raw.themeId ? +raw.themeId : undefined
+      }
+
+      console.log('Enviando request de criação:', dtoCreate);
+
+      this.postService.create(dtoCreate, dtoCreate.themeId)
         .subscribe({
-          next: () => this.router.navigate(['/']),
+          next: (response) => {
+            console.log('Post criado com sucesso:', response);
+            this.toastService.success('Post criado com sucesso!');
+            this.router.navigate(['/']);
+          },
           error: (err: HttpErrorResponse) => {
-            console.error('Erro ao criar', err.error);
+            console.error('Erro ao criar post:', err);
+
+            if (err.error) {
+              console.error('Detalhes do erro:', JSON.stringify(err.error));
+            }
+
+            this.toastService.error(`Erro ao criar o post: ${err.status === 500 ? 'Erro interno no servidor' : err.error?.message || 'Erro desconhecido'}`);
+
             if (err.error?.errors) {
               for (const [field, msg] of Object.entries(err.error.errors)) {
                 const control = this.form.get(field);

@@ -1,0 +1,13 @@
+:host {
+  display: block;
+  min-height: 100vh;
+  background-color: #f9fafb;
+}
+
+input.ng-touched.ng-invalid {
+  border-color: #ef4444;
+}
+
+input.ng-touched.ng-valid {
+  border-color: #10b981;
+}

@@ -53,7 +53,7 @@
       Voltar para home
     </a>
 
-    <div class="flex items-center gap-4">
+    <div *ngIf="isAuthor" class="flex items-center gap-4">
       <button
         (click)="editPost()"
         class="text-indigo-600 hover:text-indigo-800 text-sm font-medium flex items-center gap-1"

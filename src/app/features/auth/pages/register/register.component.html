@@ -1,0 +1,110 @@
+<div class="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+  <div class="max-w-md w-full space-y-8 bg-white p-8 rounded-lg shadow-md">
+    <div class="text-center">
+      <img class="mx-auto h-16 w-auto" src="/assets/logo-blog-maker.png" alt="Blog Maker">
+      <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900">
+        Criar conta
+      </h2>
+      <p class="mt-2 text-center text-sm text-gray-600">
+        Crie sua conta para começar a publicar conteúdo
+      </p>
+    </div>
+
+    <app-loading *ngIf="loading"></app-loading>
+
+    <form *ngIf="!loading" [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="mt-8 space-y-6">
+      <div class="rounded-md space-y-4">
+        <div>
+          <label for="name" class="block text-sm font-medium text-gray-700">Nome</label>
+          <div class="mt-1">
+            <input
+              id="name"
+              formControlName="name"
+              type="text"
+              autocomplete="name"
+              class="appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+              placeholder="Seu nome completo"
+            >
+            <p *ngIf="registerForm.get('name')?.touched && registerForm.get('name')?.invalid"
+               class="mt-1 text-xs text-red-600">
+              {{ getFieldError('name') }}
+            </p>
+          </div>
+        </div>
+
+        <div>
+          <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
+          <div class="mt-1">
+            <input
+              id="email"
+              formControlName="email"
+              type="email"
+              autocomplete="email"
+              class="appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+              placeholder="email@exemplo.com"
+            >
+            <p *ngIf="registerForm.get('email')?.touched && registerForm.get('email')?.invalid"
+               class="mt-1 text-xs text-red-600">
+              {{ getFieldError('email') }}
+            </p>
+          </div>
+        </div>
+
+        <div>
+          <label for="password" class="block text-sm font-medium text-gray-700">Senha</label>
+          <div class="mt-1">
+            <input
+              id="password"
+              formControlName="password"
+              type="password"
+              autocomplete="new-password"
+              class="appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+              placeholder="******"
+            >
+            <p *ngIf="registerForm.get('password')?.touched && registerForm.get('password')?.invalid"
+               class="mt-1 text-xs text-red-600">
+              {{ getFieldError('password') }}
+            </p>
+          </div>
+        </div>
+
+        <div>
+          <label for="confirmPassword" class="block text-sm font-medium text-gray-700">Confirmar Senha</label>
+          <div class="mt-1">
+            <input
+              id="confirmPassword"
+              formControlName="confirmPassword"
+              type="password"
+              autocomplete="new-password"
+              class="appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+              placeholder="******"
+            >
+            <p *ngIf="registerForm.get('confirmPassword')?.touched && registerForm.get('confirmPassword')?.invalid"
+               class="mt-1 text-xs text-red-600">
+              {{ getFieldError('confirmPassword') }}
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <button
+          type="submit"
+          [disabled]="registerForm.invalid"
+          class="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          Criar conta
+        </button>
+      </div>
+
+      <div class="text-center text-sm">
+        <p>
+          Já tem uma conta?
+          <a routerLink="/login" class="font-medium text-indigo-600 hover:text-indigo-500">
+            Faça login
+          </a>
+        </p>
+      </div>
+    </form>
+  </div>
+</div>

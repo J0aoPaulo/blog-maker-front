@@ -1,0 +1,64 @@
+<div class="max-w-6xl mx-auto px-8 py-10">
+  <div class="flex items-center justify-between mb-8">
+    <h1 class="text-3xl font-bold text-gray-900">Meus Posts</h1>
+    <a
+      [routerLink]="['/posts/new']"
+      class="bg-indigo-600 hover:bg-indigo-700 text-white py-2 px-4 rounded-md shadow-sm text-sm font-medium flex items-center"
+    >
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" viewBox="0 0 20 20" fill="currentColor">
+        <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
+      </svg>
+      Novo Post
+    </a>
+  </div>
+
+  <app-loading *ngIf="loading"></app-loading>
+
+  <app-empty-state
+    *ngIf="!loading && myPosts.length === 0"
+    title="Você ainda não possui posts"
+    message="Crie seu primeiro post e compartilhe seu conhecimento com a comunidade."
+    icon="document"
+    actionLink="/posts/new"
+    actionText="Criar Novo Post"
+  ></app-empty-state>
+
+  <div *ngIf="!loading && myPosts.length > 0" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+    <div *ngFor="let post of myPosts" class="bg-white rounded-xl shadow p-6 flex flex-col gap-3 hover:shadow-lg transition h-full">
+      <span class="inline-block bg-gray-100 text-gray-700 text-xs font-semibold rounded-full px-3 py-1">{{ post.theme || 'Sem tema' }}</span>
+      <h3 class="text-xl font-semibold">{{ post.title }}</h3>
+      <p class="text-gray-600 text-sm line-clamp-3 flex-grow">{{ post.content | slice:0:150 }}{{ post.content.length > 150 ? '…' : '' }}</p>
+
+      <div class="flex items-center gap-2 mt-3">
+        <img
+          [src]="post.userPhoto || 'https://avatar.iran.liara.run/public/48/' + post.name"
+          class="w-8 h-8 rounded-full"
+          alt="Autor"
+          onerror="this.src='https://avatar.iran.liara.run/public/48';"
+        />
+        <span class="text-xs text-gray-700">{{ post.name }}</span>
+        <span class="text-xs text-gray-400 ml-auto">{{ post.createdAt | date:'dd MMM, yyyy' }}</span>
+      </div>
+
+      <div class="flex mt-4 pt-3 border-t border-gray-100">
+        <a [routerLink]="['/posts', post.id]" class="text-indigo-600 hover:text-indigo-800 text-xs font-medium">
+          Ver detalhes
+        </a>
+        <div class="ml-auto flex space-x-2">
+          <a [routerLink]="['/posts', post.id, 'edit']" class="text-gray-600 hover:text-gray-800 text-xs font-medium flex items-center">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 mr-1" viewBox="0 0 20 20" fill="currentColor">
+              <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
+            </svg>
+            Editar
+          </a>
+          <button class="text-red-600 hover:text-red-800 text-xs font-medium flex items-center" (click)="deletePost(post)">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 mr-1" viewBox="0 0 20 20" fill="currentColor">
+              <path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd" />
+            </svg>
+            Excluir
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

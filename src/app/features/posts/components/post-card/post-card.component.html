@@ -59,6 +59,7 @@
     </a>
 
     <button
+      *ngIf="isAuthor"
       (click)="deletePost()"
       class="text-red-600 hover:text-red-800 text-xs"
       title="Excluir post"
