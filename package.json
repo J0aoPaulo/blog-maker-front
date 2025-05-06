@@ -30,6 +30,7 @@
     "ng2-charts": "^8.0.0",
     "postcss": "^8.5.3",
     "rxjs": "~7.8.0",
+    "serve": "^14.2.1",
     "tailwindcss": "^4.1.5",
     "tslib": "^2.3.0",
     "zone.js": "~0.15.0"
