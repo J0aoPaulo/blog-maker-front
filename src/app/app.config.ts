@@ -3,7 +3,6 @@ import { BrowserAnimationsModule, provideAnimations } from '@angular/platform-br
 import { ApplicationConfig, importProvidersFrom } from '@angular/core';
 import { provideZoneChangeDetection }            from '@angular/core';
 import { provideRouter }                        from '@angular/router';
-import { provideClientHydration, withEventReplay } from '@angular/platform-browser';
 import { HTTP_INTERCEPTORS, provideHttpClient, withFetch, withInterceptorsFromDi }   from '@angular/common/http';
 import { routes }             from './app.routes';
 import { AuthInterceptor }    from './core/interceptors/auth.interceptor';
@@ -16,12 +15,10 @@ export const appConfig: ApplicationConfig = {
     // Roteamento
     provideRouter(routes),
 
-    // Hydration (opcional, se usar server-side rendering)
-    provideClientHydration(withEventReplay()),
     // HTTP Client + nosso AuthInterceptor
     provideHttpClient(
       withInterceptorsFromDi(),
-      withFetch()       //  ← ADICIONE ISTO
+      withFetch()
     ),
 
     // agora registrar o seu interceptor como provider

@@ -3,12 +3,12 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "build": "ng build --configuration production && ng run blog-maker-front:server:production",
-  "start": "node dist/server/main.js",
+    "build": "ng build --configuration production",
+    "start": "serve -s dist",
+    "postinstall": "npm run build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "serve:ssr:blog-maker-front": "node dist/server/server.mjs",
-    "postinstall": "ng build"
+    "serve:ssr:blog-maker-front": "node dist/server/server.mjs"
   },
   "private": true,
   "dependencies": {
