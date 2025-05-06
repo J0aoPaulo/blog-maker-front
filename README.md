@@ -16,6 +16,7 @@
   <a href="#instalação-e-configuração">Instalação</a> •
   <a href="#uso-da-aplicação">Uso</a> •
   <a href="#integração-com-backend">Integração</a> •
+  <a href="#deploy-no-railway">Deploy</a> •
   <a href="#relatório-do-projeto">Relatório</a>
 </p>
 
@@ -164,6 +165,25 @@ O frontend se comunica com o backend Spring Boot através de chamadas de API RES
 | `analytics.service.ts` | Obtém estatísticas e métricas |
 
 Todas as requisições HTTP são interceptadas pelo `auth.interceptor.ts` que adiciona o token JWT às requisições autenticadas.
+
+## 🚂 Deploy no Railway
+
+O Blog Maker Frontend está hospedado na plataforma [Railway](https://railway.app/), uma solução moderna e eficiente para deploy de aplicações web.
+
+### Sobre o Railway
+
+Railway é uma plataforma de infraestrutura como serviço (IaaS) que simplifica o processo de deploy, oferecendo:
+
+- **Deploy Automático**: Integração direta com GitHub para CI/CD
+- **Previews por Pull Request**: Ambiente de teste para cada PR
+- **Domínio Personalizado**: Configuração simples de domínios
+- **Scaling Automático**: Ajuste de recursos conforme necessidade
+- **Monitoramento**: Logs e métricas em tempo real
+
+### Como acessar
+
+A aplicação está disponível em:
+- [https://blog-maker-front-production.up.railway.app/](https://blog-maker-front-production.up.railway.app/)
 
 ## 📋 Relatório do Projeto
 
