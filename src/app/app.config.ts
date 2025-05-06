@@ -9,22 +9,17 @@ import { AuthInterceptor }    from './core/interceptors/auth.interceptor';
 
 export const appConfig: ApplicationConfig = {
   providers: [
-    // Mantém a detecção de zona otimizada
     provideZoneChangeDetection({ eventCoalescing: true }),
 
-    // Roteamento
     provideRouter(routes),
 
-    // HTTP Client + nosso AuthInterceptor
     provideHttpClient(
       withInterceptorsFromDi(),
       withFetch()
     ),
 
-    // agora registrar o seu interceptor como provider
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
 
-    // animações + Material
     provideAnimations(),
     importProvidersFrom(BrowserAnimationsModule, MatSnackBarModule)
   ]

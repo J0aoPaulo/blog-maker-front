@@ -45,7 +45,6 @@ export class AnalyticsComponent implements OnInit {
     this.loadingData = true;
     this.hasError = false;
 
-    // Carrega o resumo
     this.analyticsService.getSummary().subscribe({
       next: (data) => {
         this.summary = data;
@@ -55,7 +54,6 @@ export class AnalyticsComponent implements OnInit {
       }
     });
 
-    // Carrega dados por autor
     this.analyticsService.getPostsByAuthor().subscribe({
       next: (data) => {
         this.authorData = data;
@@ -66,7 +64,6 @@ export class AnalyticsComponent implements OnInit {
       }
     });
 
-    // Carrega dados por tema
     this.analyticsService.getPostsByTheme().subscribe({
       next: (data) => {
         this.themeData = data;
@@ -77,7 +74,6 @@ export class AnalyticsComponent implements OnInit {
       }
     });
 
-    // Carrega série temporal
     this.loadTimeSeriesData();
 
     this.loadingData = false;
@@ -113,10 +109,8 @@ export class AnalyticsComponent implements OnInit {
       this.authorChart.destroy();
     }
 
-    // 1) Ordena por posts (desc)
     const sorted = [...this.authorData].sort((a, b) => b.totalPosts - a.totalPosts);
 
-    // 2) Mantém top N e agrupa o resto em "Outros"
     const N = 8;
     let displayItems: { authorName: string; totalPosts: number }[];
     if (sorted.length > N) {
@@ -133,7 +127,6 @@ export class AnalyticsComponent implements OnInit {
     const labels = displayItems.map(item => item.authorName);
     const data   = displayItems.map(item => item.totalPosts);
 
-    // 3) Cria o gráfico horizontal
     this.authorChart = new Chart(ctx, {
       type: 'bar',
       data: {
@@ -141,14 +134,13 @@ export class AnalyticsComponent implements OnInit {
         datasets: [{
           label: 'Posts por Autor',
           data,
-          // você pode manter ou remover as cores conforme seu design
           backgroundColor: 'rgba(99, 102, 241, 0.7)',
           borderColor: 'rgba(99, 102, 241, 1)',
           borderWidth: 1
         }]
       },
       options: {
-        indexAxis: 'y',          // barra horizontal
+        indexAxis: 'y',
         responsive: true,
         maintainAspectRatio: false,
         plugins: {
