@@ -173,7 +173,7 @@ O frontend se comunica com o backend Spring Boot através de chamadas de API RES
 
 Todas as requisições HTTP são interceptadas pelo `auth.interceptor.ts` que adiciona o token JWT às requisições autenticadas.
 
-## 🚂 Deploy no Railway
+## 🚂 Deploy no Railway (Em desenvolvimento)
 
 O Blog Maker Frontend está hospedado na plataforma [Railway](https://railway.app/), uma solução moderna e eficiente para deploy de aplicações web.
 
