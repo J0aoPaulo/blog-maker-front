@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  api: '/api/v1'
+  api: 'https://blog-maker-production.up.railway.app/api/v1'
 };
