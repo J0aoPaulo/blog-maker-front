@@ -45,6 +45,11 @@ Desenvolvida como parte do programa Acelera Java, esta plataforma demonstra a im
 - **HttpClient**: Módulo para comunicação com APIs RESTful
 - **ESLint/Prettier**: Ferramentas para garantir qualidade e consistência do código
 
+## Algumas telas do projeto (Analytics, Meus Posts e Home)
+![image](https://github.com/user-attachments/assets/9bd271f6-0236-4641-83d0-71ba61d6c99d)
+![image](https://github.com/user-attachments/assets/4abff606-0f45-414a-9f48-8878a9cebed3)
+![image](https://github.com/user-attachments/assets/dc3dc3d9-4f74-46de-afd3-0901af6db3b2)
+
 ## 📁 Estrutura do Projeto
 
 Uma arquitetura modular e bem organizada, separando claramente as responsabilidades:
