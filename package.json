@@ -3,8 +3,8 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "serve -s dist",
-    "build": "ng build",
+    "build": "ng build --configuration production && ng run blog-maker-front:server:production",
+    "start": "node dist/server/main.js",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "serve:ssr:blog-maker-front": "node dist/blog-maker-front/server/server.mjs",
