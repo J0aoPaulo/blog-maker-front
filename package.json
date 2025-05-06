@@ -4,10 +4,10 @@
   "scripts": {
     "ng": "ng",
     "build": "ng build --configuration production && ng run blog-maker-front:server:production",
-    "start": "node dist/server/main.js",
+  "start": "node dist/server/main.js",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "serve:ssr:blog-maker-front": "node dist/blog-maker-front/server/server.mjs",
+    "serve:ssr:blog-maker-front": "node dist/server/server.mjs",
     "postinstall": "ng build"
   },
   "private": true,
