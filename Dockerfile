@@ -13,4 +13,4 @@
   COPY --from=build /app/dist ./dist
   EXPOSE 4000
   # serve dist/ na porta 4000
-  CMD ["sh", "-c", "serve -s dist -l ${PORT:-4000}"]
+  CMD ["node","dist/server/main.js"]
