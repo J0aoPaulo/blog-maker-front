@@ -5,37 +5,11 @@ import { catchError, map, tap } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
 import { Router } from '@angular/router';
 import { isPlatformBrowser } from '@angular/common';
-
-export interface UserResponse {
-  id?: string;
-  name: string;
-  email: string;
-  role: string;
-  photo: string | null;
-}
-
-export interface AuthRequest {
-  email: string;
-  password: string;
-}
-
-export interface RegisterRequest {
-  name: string;
-  email: string;
-  password: string;
-}
-
-export interface AuthResponse {
-  token: string;
-  user: UserResponse;
-}
-
-export interface UpdateUserRequest {
-  name?: string;
-  email?: string;
-  password?: string;
-  photo?: string;
-}
+import { UserResponse } from '../models/response/user-response.model';
+import { AuthRequest } from '../models/request/auth-request.model';
+import { RegisterRequest } from '../models/request/register-request.model';
+import { AuthResponse } from '../models/response/auth-response.model';
+import { UpdateUserRequest } from '../models/response/update-user-request.model';
 
 @Injectable({
   providedIn: 'root'
@@ -110,7 +84,7 @@ export class AuthService {
           console.log('Login successful:', response);
 
           const authResponse: AuthResponse = {
-            token: response.token || response, 
+            token: response.token || response,
             user: response.user || null
           };
 

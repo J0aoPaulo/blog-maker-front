@@ -3,9 +3,9 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, catchError, of, throwError } from 'rxjs';
 
 import { environment }          from '../../../environments/environment';
-import { CreatePostRequest }    from '../models/create-post-request.model';
-import { UpdatePostRequest }    from '../models/update-post-request.model';
-import { PostResponse }         from '../models/post-reponse.model';
+import { CreatePostRequest }    from '../models/request/create-post-request.model';
+import { UpdatePostRequest }    from '../models/request/update-post-request.model';
+import { PostResponse }         from '../models/response/post-reponse.model';
 
 @Injectable({ providedIn: 'root' })
 export class PostService {

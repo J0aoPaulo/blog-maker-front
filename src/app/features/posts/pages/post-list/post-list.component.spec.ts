@@ -6,7 +6,7 @@ import { By } from '@angular/platform-browser';
 
 import { PostListComponent } from './post-list.component';
 import { PostService } from '../../../../core/services/post.service';
-import { PostResponse } from '../../../../core/models/post-reponse.model';
+import { PostResponse } from '../../../../core/models/response/post-reponse.model';
 import { AuthService } from '../../../../core/services/auth.service';
 
 import { Component } from '@angular/core';
