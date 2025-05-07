@@ -18,7 +18,6 @@ export const authGuard: CanActivateFn = (
     return true;
   }
 
-
   if (isBrowser) {
     toastService.warning('Você precisa estar logado para acessar esta página');
   }

@@ -22,7 +22,7 @@ export class AuthInterceptor implements HttpInterceptor {
   intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
     const token = this.authService.getToken();
 
-    if (request.url.includes('/posts')) {
+    /*if (request.url.includes('/posts')) {
       console.log(`[Interceptor] ${request.method} request to: ${request.url}`);
       console.log('[Interceptor] Authorization token exists:', !!token);
 
@@ -34,7 +34,7 @@ export class AuthInterceptor implements HttpInterceptor {
       if (request.method === 'POST' || request.method === 'PUT') {
         console.log('[Interceptor] Request body:', JSON.stringify(request.body));
       }
-    }
+    }*/
 
     if (token) {
       const authReq = request.clone({
@@ -43,9 +43,9 @@ export class AuthInterceptor implements HttpInterceptor {
         }
       });
 
-      if (request.url.includes('/posts')) {
+      /*if (request.url.includes('/posts')) {
         console.log('[Interceptor] Added auth token to request');
-      }
+      }*/
 
       return next.handle(authReq).pipe(
         tap(event => {
