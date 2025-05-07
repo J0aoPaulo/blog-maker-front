@@ -13,6 +13,7 @@ import { LoadingComponent } from '../../../../shared/components/loading/loading.
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css']
 })
+
 export class LoginComponent {
   loginForm: FormGroup;
   loading = false;

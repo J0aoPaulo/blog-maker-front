@@ -2,7 +2,7 @@ import { Component, inject, OnInit } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { PostService } from '../../../../core/services/post.service';
-import { PostResponse } from '../../../../core/models/post-reponse.model';
+import { PostResponse } from '../../../../core/models/response/post-reponse.model';
 import { AuthService } from '../../../../core/services/auth.service';
 import { ToastService } from '../../../../core/services/toast.service';
 

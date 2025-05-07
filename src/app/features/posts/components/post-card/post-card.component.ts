@@ -1,6 +1,6 @@
 import { Component, inject, Input, OnInit } from '@angular/core';
 import { CommonModule }     from '@angular/common';
-import { PostResponse }     from '../../../../core/models/post-reponse.model';
+import { PostResponse }     from '../../../../core/models/response/post-reponse.model';
 import { PostService } from '../../../../core/services/post.service';
 import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../../../../core/services/auth.service';

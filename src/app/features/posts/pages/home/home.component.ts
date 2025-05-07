@@ -2,7 +2,7 @@ import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { PostService } from '../../../../core/services/post.service';
-import { PostResponse } from '../../../../core/models/post-reponse.model';
+import { PostResponse } from '../../../../core/models/response/post-reponse.model';
 
 @Component({
   selector: 'app-home',

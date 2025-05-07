@@ -2,7 +2,7 @@ import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
 import { PostService } from '../../../../core/services/post.service';
-import { PostResponse } from '../../../../core/models/post-reponse.model';
+import { PostResponse } from '../../../../core/models/response/post-reponse.model';
 import { AuthService } from '../../../../core/services/auth.service';
 import { LoadingComponent } from '../../../../shared/components/loading/loading.component';
 import { EmptyStateComponent } from '../../../../shared/components/empty-state/empty-state.component';
