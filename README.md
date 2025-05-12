@@ -16,7 +16,7 @@
   <a href="#instalação-e-configuração">Instalação</a> •
   <a href="#uso-da-aplicação">Uso</a> •
   <a href="#integração-com-backend">Integração</a> •
-  <a href="#deploy-no-railway">Deploy</a> •
+  <a href="#deploy">Deploy</a> •
   <a href="#relatório-do-projeto">Relatório</a>
 </p>
 
@@ -173,24 +173,54 @@ O frontend se comunica com o backend Spring Boot através de chamadas de API RES
 
 Todas as requisições HTTP são interceptadas pelo `auth.interceptor.ts` que adiciona o token JWT às requisições autenticadas.
 
-## 🚂 Deploy no Railway (Em desenvolvimento)
+## 🚀 Deploy
 
-O Blog Maker Frontend está hospedado na plataforma [Railway](https://railway.app/), uma solução moderna e eficiente para deploy de aplicações web.
+O Blog Maker Frontend está hospedado no [Netlify](https://www.netlify.com/), uma plataforma moderna para hospedagem e automação de aplicações web estáticas, enquanto o backend está hospedado no [Railway](https://railway.app/).
 
-### Sobre o Railway
+### Frontend no Netlify
 
-Railway é uma plataforma de infraestrutura como serviço (IaaS) que simplifica o processo de deploy, oferecendo:
+O Netlify oferece uma série de benefícios para nossa aplicação Angular:
 
-- **Deploy Automático**: Integração direta com GitHub para CI/CD
+- **Deploy Contínuo**: Integração automática com GitHub para CI/CD
+- **SSL Gratuito**: Certificados HTTPS automáticos
+- **CDN Global**: Distribuição de conteúdo otimizada
 - **Previews por Pull Request**: Ambiente de teste para cada PR
-- **Domínio Personalizado**: Configuração simples de domínios
-- **Scaling Automático**: Ajuste de recursos conforme necessidade
+- **Build Automation**: Configuração automática do processo de build
+
+### Backend no Railway
+
+O backend Spring Boot está hospedado no Railway, oferecendo:
+
+- **Escalabilidade**: Ajuste automático de recursos
 - **Monitoramento**: Logs e métricas em tempo real
+- **Banco de Dados**: Gerenciamento integrado do PostgreSQL
+- **Segurança**: Certificados SSL e configurações de segurança automáticas
 
 ### Como acessar
 
 A aplicação está disponível em:
-- [https://blog-maker-front-production.up.railway.app/](https://blog-maker-front-production.up.railway.app/)
+- Frontend: [https://acelera-blog-maker.netlify.app/](https://acelera-blog-maker.netlify.app/)
+- Backend: [https://blog-maker-production.up.railway.app/](https://blog-maker-production.up.railway.app/)
+
+### Configuração de Ambiente
+
+Para desenvolvimento local, configure o arquivo `src/environments/environment.ts`:
+
+```typescript
+export const environment = {
+  production: false,
+  api: 'http://localhost:8080/api/v1'
+};
+```
+
+Para produção (`src/environments/environment.prod.ts`):
+
+```typescript
+export const environment = {
+  production: true,
+  api: 'https://blog-maker-production.up.railway.app/api/v1'
+};
+```
 
 ## 📋 Relatório do Projeto
 
