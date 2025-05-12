@@ -102,9 +102,7 @@
         "deploy": {
           "builder": "@netlify-builder/deploy:deploy",
           "options": {
-            "outputPath": "dist/browser",
-            "netlifyToken": "${NETLIFY_TOKEN}",
-            "siteId": "${NETLIFY_SITE_ID}"
+            "outputPath": "dist/browser"
           }
         }
       }
