@@ -103,8 +103,8 @@
           "builder": "@netlify-builder/deploy:deploy",
           "options": {
             "outputPath": "dist/browser",
-            "netlifyToken": "nfp_pwQE4nkMWuLDBHjoBbyUsEYxAspgr1hia65d",
-            "siteId": "aa411bb5-bead-42fc-89ba-b392700c321c"
+            "netlifyToken": "${NETLIFY_TOKEN}",
+            "siteId": "${NETLIFY_SITE_ID}"
           }
         }
       }
