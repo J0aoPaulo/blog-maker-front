@@ -80,9 +80,21 @@ export class AnalyticsComponent implements OnInit {
   }
 
   loadTimeSeriesData(): void {
+    // Ensure dates are properly formatted
+    const formattedStartDate = this.startDate ? this.startDate : this.getDefaultStartDate();
+    const formattedEndDate = this.endDate ? this.endDate : this.getDefaultEndDate();
+
+    // Add error boundaries in case dates are invalid
+    if (!formattedStartDate || !formattedEndDate) {
+      this.hasError = true;
+      this.errorMessage = 'Datas de início ou fim inválidas';
+      this.timeData = [];
+      return;
+    }
+
     this.analyticsService.getPostsOverTime(
-      this.startDate,
-      this.endDate,
+      formattedStartDate,
+      formattedEndDate,
       this.timeGranularity
     ).subscribe({
       next: (data) => {

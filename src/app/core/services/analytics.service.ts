@@ -1,6 +1,6 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, retry, catchError, throwError, timeout } from 'rxjs';
 import { environment } from '../../../environments/environment';
 
 export interface SummaryDTO {
@@ -35,15 +35,30 @@ export class AnalyticsService {
   constructor(private http: HttpClient) {}
 
   getSummary(): Observable<SummaryDTO> {
-    return this.http.get<SummaryDTO>(`${this.apiUrl}/summary`);
+    return this.http.get<SummaryDTO>(`${this.apiUrl}/summary`)
+      .pipe(
+        timeout(10000), // 10 second timeout
+        retry(3),
+        catchError(this.handleError)
+      );
   }
 
   getPostsByAuthor(): Observable<AuthorPostCountDTO[]> {
-    return this.http.get<AuthorPostCountDTO[]>(`${this.apiUrl}/posts-by-author`);
+    return this.http.get<AuthorPostCountDTO[]>(`${this.apiUrl}/posts-by-author`)
+      .pipe(
+        timeout(10000), // 10 second timeout
+        retry(3),
+        catchError(this.handleError)
+      );
   }
 
   getPostsByTheme(): Observable<ThemePostCountDTO[]> {
-    return this.http.get<ThemePostCountDTO[]>(`${this.apiUrl}/posts-by-theme`);
+    return this.http.get<ThemePostCountDTO[]>(`${this.apiUrl}/posts-by-theme`)
+      .pipe(
+        timeout(10000), // 10 second timeout
+        retry(3),
+        catchError(this.handleError)
+      );
   }
 
   getPostsOverTime(
@@ -51,9 +66,35 @@ export class AnalyticsService {
     end: string,
     granularity: 'day' | 'week' | 'month' = 'day'
   ): Observable<TimeBucketDTO[]> {
+    // Properly build HttpParams object instead of using template string
+    const params = new HttpParams()
+      .set('start', start)
+      .set('end', end)
+      .set('granularity', granularity);
+
+    // Use params object instead of inline parameters
     return this.http.get<TimeBucketDTO[]>(
       `${this.apiUrl}/posts-over-time`,
-      { params: { start, end, granularity } }
+      { params }
+    ).pipe(
+      timeout(15000), // 15 second timeout for this complex query
+      retry(2),
+      catchError(this.handleError)
     );
+  }
+
+  private handleError(error: any) {
+    let errorMessage = 'Erro desconhecido ao acessar API de analytics';
+
+    if (error.error instanceof ErrorEvent) {
+      // Client-side error
+      errorMessage = `Erro: ${error.error.message}`;
+    } else {
+      // Server-side error
+      errorMessage = `Código: ${error.status}, Mensagem: ${error.message}`;
+    }
+
+    console.error('Analytics API error:', errorMessage, error);
+    return throwError(() => error);
   }
 }
