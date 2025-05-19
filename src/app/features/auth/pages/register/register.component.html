@@ -89,6 +89,36 @@
             </p>
           </div>
         </div>
+
+        <div>
+          <label class="block text-sm font-medium text-gray-700">Gênero</label>
+          <div class="mt-2 space-x-4 flex">
+            <div class="flex items-center">
+              <input
+                id="male"
+                formControlName="gender"
+                type="radio"
+                value="masculino"
+                class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300"
+              >
+              <label for="male" class="ml-2 block text-sm text-gray-700">Masculino</label>
+            </div>
+            <div class="flex items-center">
+              <input
+                id="female"
+                formControlName="gender"
+                type="radio"
+                value="feminino"
+                class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300"
+              >
+              <label for="female" class="ml-2 block text-sm text-gray-700">Feminino</label>
+            </div>
+          </div>
+          <p *ngIf="registerForm.get('gender')?.touched && registerForm.get('gender')?.invalid"
+             class="mt-1 text-xs text-red-600">
+            {{ getFieldError('gender') }}
+          </p>
+        </div>
       </div>
 
       <div>

@@ -11,10 +11,17 @@
               class="w-full h-full object-cover"
               onerror="this.src='https://avatar.iran.liara.run/public';"
             >
-            <div *ngIf="!previewUrl && !user?.photo" class="flex items-center justify-center h-full bg-gray-200 text-gray-400">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16" viewBox="0 0 20 20" fill="currentColor">
-                <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd" />
-              </svg>
+            <div *ngIf="!previewUrl && !user?.photo" class="flex items-center justify-center h-full bg-gray-200">
+              <img
+                *ngIf="user?.gender === 'feminino'"
+                src="/assets/female-placeholder.png"
+                alt="Avatar Feminino"
+                class="w-full h-full object-cover">
+              <img
+                *ngIf="user?.gender !== 'feminino'"
+                src="/assets/male-placeholder.png"
+                alt="Avatar Masculino"
+                class="w-full h-full object-cover">
             </div>
           </div>
           <h3 class="text-xl font-bold text-gray-900">{{ user?.name }}</h3>

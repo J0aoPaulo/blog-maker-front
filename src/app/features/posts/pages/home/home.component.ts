@@ -15,6 +15,8 @@ export class HomeComponent implements OnInit {
   angularPosts: PostResponse[] = [];
   springPosts: PostResponse[] = [];
   reactPosts: PostResponse[] = [];
+  gitPosts: PostResponse[] = [];
+  outrosPosts: PostResponse[] = [];
   recentPosts: PostResponse[] = [];
 
   private postService = inject(PostService);
@@ -39,6 +41,19 @@ export class HomeComponent implements OnInit {
           .filter(p => p.theme?.toLowerCase().includes('react'))
           .slice(0, 3);
 
+        this.gitPosts = posts
+          .filter(p => p.theme?.toLowerCase().includes('git'))
+          .slice(0, 3);
+
+        this.outrosPosts = posts
+          .filter(p => {
+            const theme = p.theme?.toLowerCase() || '';
+            return !theme.includes('angular') &&
+                   !theme.includes('spring') &&
+                   !theme.includes('react') &&
+                   !theme.includes('git');
+          })
+          .slice(0, 3);
       },
       error: (erro) => {
         console.error('Erro ao carregar posts:', erro);

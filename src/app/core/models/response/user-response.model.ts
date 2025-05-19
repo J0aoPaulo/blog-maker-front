@@ -4,4 +4,5 @@ export interface UserResponse {
   email: string;
   role: string;
   photo: string | null;
+  gender?: string;
 }
