@@ -64,8 +64,9 @@ export class HomeComponent implements OnInit {
   private carregarPostsRecentes() {
     this.postService.getAll().subscribe({
       next: (posts) => {
-        this.recentPosts = posts.slice(0, 3);
-
+        this.recentPosts = posts
+          .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+          .slice(0, 3);
       },
       error: (erro) => {
         console.error('Erro ao carregar posts recentes:', erro);
