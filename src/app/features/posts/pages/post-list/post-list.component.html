@@ -26,21 +26,93 @@
     Voltar para página inicial
   </a>
 
-  <div class="border-b border-gray-200 mb-8"></div>
+  <!-- Filter and Sort section -->
+  <div class="bg-white rounded-lg shadow-sm p-4 mb-8">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <!-- Search Field -->
+      <div>
+        <label for="search" class="block text-sm font-medium text-gray-700 mb-1">Buscar</label>
+        <div class="relative">
+          <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+            <svg class="h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+              <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd" />
+            </svg>
+          </div>
+          <input
+            type="text"
+            id="search"
+            [(ngModel)]="searchTerm"
+            (ngModelChange)="onSearchChange()"
+            class="pl-10 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md py-2 border px-3"
+            placeholder="Buscar por título ou conteúdo">
+        </div>
+      </div>
 
-  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      <!-- Category Filter -->
+      <div>
+        <label for="theme-filter" class="block text-sm font-medium text-gray-700 mb-1">Filtrar por categoria</label>
+        <select
+          id="theme-filter"
+          [(ngModel)]="selectedThemeId"
+          (ngModelChange)="onThemeChange()"
+          class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md border"
+        >
+          <option [ngValue]="null">Todas as categorias</option>
+          <option *ngFor="let theme of themes" [ngValue]="theme.id">{{ theme.description }}</option>
+        </select>
+      </div>
+
+      <!-- Sort Options -->
+      <div>
+        <label for="sort-options" class="block text-sm font-medium text-gray-700 mb-1">Ordenar por</label>
+        <select
+          id="sort-options"
+          [(ngModel)]="selectedSort"
+          (ngModelChange)="onSortChange()"
+          class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md border"
+        >
+          <option *ngFor="let option of sortOptions" [value]="option.value">{{ option.label }}</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Clear filters -->
+    <div class="mt-4 flex justify-end">
+      <button
+        (click)="clearFilters()"
+        class="text-sm text-indigo-600 hover:text-indigo-800 font-medium flex items-center"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" viewBox="0 0 20 20" fill="currentColor">
+          <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" />
+        </svg>
+        Limpar filtros
+      </button>
+    </div>
+  </div>
+
+  <!-- Loading indicator -->
+  <div *ngIf="isLoading" class="flex justify-center py-12">
+    <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600"></div>
+  </div>
+
+  <!-- Posts Grid -->
+  <div *ngIf="!isLoading" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
     <app-post-card
-      *ngFor="let post of posts$ | async"
+      *ngFor="let post of filteredPosts$ | async"
       [post]="post"
       class="h-full"
     ></app-post-card>
   </div>
 
-  <div *ngIf="(posts$ | async)?.length === 0" class="text-center py-12">
+  <!-- Empty state -->
+  <div *ngIf="!isLoading && (filteredPosts$ | async)?.length === 0" class="text-center py-12">
     <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 mx-auto text-gray-300 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
     </svg>
     <p class="text-gray-500 text-lg">Nenhum post encontrado</p>
-    <a [routerLink]="['/posts/new']" class="mt-4 inline-block text-indigo-600 hover:text-indigo-800 font-medium">Criar o primeiro post</a>
+    <p *ngIf="searchTerm || selectedThemeId !== null" class="text-gray-500 mt-2">
+      Tente ajustar os filtros para ver mais resultados
+    </p>
+    <a [routerLink]="['/posts/new']" class="mt-4 inline-block text-indigo-600 hover:text-indigo-800 font-medium">Criar um novo post</a>
   </div>
 </div>
