@@ -10,7 +10,7 @@ import { Subscription } from 'rxjs';
   standalone: true,
   imports: [CommonModule, RouterModule],
   template: `
-    <header class="bg-white shadow-[0_1px_3px_rgba(0,0,0,0.05)] py-2">
+    <header class="bg-white shadow-md border-b border-blue-100 py-2">
       <div class="max-w-6xl mx-auto flex justify-between items-center px-8">
         <div>
           <a routerLink="/">
@@ -24,22 +24,22 @@ import { Subscription } from 'rxjs';
         </div>
         <div class="flex items-center">
           <nav class="flex text-gray-700 font-medium">
-            <a routerLink="/" class="px-4 hover:text-indigo-600 transition">Home</a>
-            <a routerLink="/posts" class="px-4 hover:text-indigo-600 transition">Posts</a>
-            <a *ngIf="isAuthenticated" routerLink="/my-posts" class="px-4 hover:text-indigo-600 transition">Meus Posts</a>
-            <a routerLink="/analytics" class="px-4 hover:text-indigo-600 transition">Analytics</a>
+            <a routerLink="/" class="px-4 hover:text-blue-600 transition">Home</a>
+            <a routerLink="/posts" class="px-4 hover:text-blue-600 transition">Posts</a>
+            <a *ngIf="isAuthenticated" routerLink="/my-posts" class="px-4 hover:text-blue-600 transition">Meus Posts</a>
+            <a routerLink="/analytics" class="px-4 hover:text-blue-600 transition">Analytics</a>
           </nav>
 
           <div *ngIf="!isAuthenticated" class="flex items-center ml-6 pl-6 border-l border-gray-200 space-x-4">
             <a
               routerLink="/login"
-              class="text-sm font-medium text-gray-700 hover:text-indigo-600 transition"
+              class="text-sm font-medium text-gray-700 hover:text-blue-600 transition"
             >
               Login
             </a>
             <a
               routerLink="/register"
-              class="text-sm font-medium bg-indigo-600 hover:bg-indigo-700 text-white py-2 px-4 rounded-md shadow-sm transition"
+              class="text-sm font-medium bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-md shadow-sm transition"
             >
               Cadastre-se
             </a>

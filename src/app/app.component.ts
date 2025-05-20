@@ -16,9 +16,11 @@ import { HttpClientModule } from '@angular/common/http';
     HttpClientModule
   ],
   template: `
-    <app-header></app-header>
-    <router-outlet></router-outlet>
-    <app-toast></app-toast>
+    <div class="min-h-screen bg-gradient-to-br from-blue-50 to-blue-100">
+      <app-header></app-header>
+      <router-outlet></router-outlet>
+      <app-toast></app-toast>
+    </div>
   `,
   styles: [],
 })
