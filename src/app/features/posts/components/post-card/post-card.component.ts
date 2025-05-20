@@ -41,16 +41,6 @@ export class PostCardComponent implements OnInit {
       : this.post.content;
   }
 
-  placeholderUrl = 'https://via.placeholder.com/40?text=?';
-
-  onImgError(event: Event) {
-    (event.target as HTMLImageElement).src = this.placeholderUrl;
-  }
-
-  get initial() {
-    return this.post.name?.charAt(0).toUpperCase() ?? '';
-  }
-
   deletePost() {
     if (!this.isAuthor) {
       this.toastService.error('Você não tem permissão para excluir este post');

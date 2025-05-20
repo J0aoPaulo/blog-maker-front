@@ -30,12 +30,14 @@
       <p class="text-gray-600 text-sm line-clamp-3 flex-grow">{{ post.content | slice:0:150 }}{{ post.content.length > 150 ? '…' : '' }}</p>
 
       <div class="flex items-center gap-2 mt-3">
-        <img
-          [src]="post.userPhoto || 'https://avatar.iran.liara.run/public/48/' + post.name"
-          class="w-8 h-8 rounded-full"
-          alt="Autor"
-          onerror="this.src='https://avatar.iran.liara.run/public/48';"
-        />
+        <div class="w-8 h-8 rounded-full overflow-hidden bg-gray-100">
+          <img
+            [src]="post.userPhoto || 'https://avatar.iran.liara.run/public/48/' + post.name"
+            alt="Avatar {{ post.name }}"
+            class="w-full h-full object-cover"
+            onerror="this.src='https://avatar.iran.liara.run/public/48'"
+          />
+        </div>
         <span class="text-xs text-gray-700">{{ post.name }}</span>
         <span class="text-xs text-gray-400 ml-auto">{{ post.createdAt | date:'dd MMM, yyyy' }}</span>
       </div>

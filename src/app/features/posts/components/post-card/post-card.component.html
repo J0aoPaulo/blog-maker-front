@@ -9,20 +9,11 @@
   <div class="flex items-center gap-3">
     <div class="w-10 h-10 rounded-full overflow-hidden bg-gray-100">
       <img
-        *ngIf="post.userPhoto; else initialsTpl"
-        [src]="post.userPhoto"
+        [src]="post.userPhoto || 'https://avatar.iran.liara.run/public/48/' + post.name"
         alt="Avatar {{ post.name }}"
         class="w-full h-full object-cover"
-        (error)="onImgError($event)"
+        onerror="this.src='https://avatar.iran.liara.run/public/48'"
       />
-      <ng-template #initialsTpl>
-        <span
-          class="flex items-center justify-center w-full h-full
-                 text-indigo-600 font-semibold bg-indigo-100"
-        >
-          {{ initial }}
-        </span>
-      </ng-template>
     </div>
     <div>
       <p class="text-sm font-medium text-gray-800">{{ post.name }}</p>
