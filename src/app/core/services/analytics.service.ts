@@ -66,6 +66,9 @@ export class AnalyticsService {
     end: string,
     granularity: 'day' | 'week' | 'month' = 'day'
   ): Observable<TimeBucketDTO[]> {
+    // Adicionar logs para debug
+    console.log(`API Analytics - Requisitando posts de ${start} até ${end} com granularidade ${granularity}`);
+
     // Properly build HttpParams object instead of using template string
     const params = new HttpParams()
       .set('start', start)
@@ -79,7 +82,10 @@ export class AnalyticsService {
     ).pipe(
       timeout(15000), // 15 second timeout for this complex query
       retry(2),
-      catchError(this.handleError)
+      catchError((error) => {
+        console.error('Erro na API de analytics (posts-over-time):', error);
+        return this.handleError(error);
+      })
     );
   }
 

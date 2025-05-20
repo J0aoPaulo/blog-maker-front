@@ -84,6 +84,13 @@ export class AnalyticsComponent implements OnInit {
     const formattedStartDate = this.startDate ? this.startDate : this.getDefaultStartDate();
     const formattedEndDate = this.endDate ? this.endDate : this.getDefaultEndDate();
 
+    // Debug logs para diagnosticar o problema
+    console.log('Carregando dados temporais com parâmetros:', {
+      startDate: formattedStartDate,
+      endDate: formattedEndDate,
+      granularity: this.timeGranularity
+    });
+
     // Add error boundaries in case dates are invalid
     if (!formattedStartDate || !formattedEndDate) {
       this.hasError = true;
@@ -92,6 +99,8 @@ export class AnalyticsComponent implements OnInit {
       return;
     }
 
+    this.loadingData = true; // Definir loading como true antes da chamada
+
     this.analyticsService.getPostsOverTime(
       formattedStartDate,
       formattedEndDate,
@@ -99,10 +108,22 @@ export class AnalyticsComponent implements OnInit {
     ).subscribe({
       next: (data) => {
         this.timeData = data;
+        console.log('Dados temporais recebidos:', data);
+
+        // Se não tiver dados com a granularidade atual, tentar com granularidade diferente
+        if (data.length === 0 && this.timeGranularity !== 'day') {
+          console.log('Tentando com granularidade diária para visualizar melhor os dados');
+          this.timeGranularity = 'day';
+          this.loadTimeSeriesData();
+          return;
+        }
+
         setTimeout(() => this.renderTimeChart(), 0);
+        this.loadingData = false;
       },
       error: (error) => {
         this.handleError('Não foi possível carregar dados temporais', error);
+        this.loadingData = false;
       }
     });
   }
@@ -223,7 +244,10 @@ export class AnalyticsComponent implements OnInit {
   }
 
   private renderTimeChart(): void {
-    if (!this.timeChartCanvas || this.timeData.length === 0) return;
+    if (!this.timeChartCanvas || this.timeData.length === 0) {
+      console.log('Não foi possível renderizar o gráfico: canvas não disponível ou sem dados');
+      return;
+    }
 
     const ctx = this.timeChartCanvas.nativeElement.getContext('2d');
     if (!ctx) return;
@@ -231,6 +255,8 @@ export class AnalyticsComponent implements OnInit {
     if (this.timeChart) {
       this.timeChart.destroy();
     }
+
+    console.log('Renderizando gráfico temporal com dados:', this.timeData);
 
     const labels = this.timeData.map(item => this.formatBucket(item.bucket));
     const data = this.timeData.map(item => item.totalPosts);
@@ -262,6 +288,17 @@ export class AnalyticsComponent implements OnInit {
             font: {
               size: 16
             }
+          },
+          tooltip: {
+            callbacks: {
+              title: (tooltipItem) => {
+                const idx = tooltipItem[0].dataIndex;
+                return `Data: ${labels[idx]}`;
+              },
+              label: (tooltipItem) => {
+                return `Posts: ${tooltipItem.formattedValue}`;
+              }
+            }
           }
         },
         scales: {
@@ -279,10 +316,10 @@ export class AnalyticsComponent implements OnInit {
   private formatBucket(bucket: string): string {
     if (this.timeGranularity === 'day') {
       const [year, month, day] = bucket.split('-');
-      return `${day}/${month}`;
+      return `${day}/${month}/${year}`;
     } else if (this.timeGranularity === 'week') {
       const [year, week] = bucket.split('-');
-      return `Sem ${week}`;
+      return `Sem ${week}/${year}`;
     } else {
       const [year, month] = bucket.split('-');
       const monthNames = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
@@ -292,7 +329,8 @@ export class AnalyticsComponent implements OnInit {
 
   private getDefaultStartDate(): string {
     const date = new Date();
-    date.setMonth(date.getMonth() - 3);
+    // Ajustando para abranger um período maior (6 meses)
+    date.setMonth(date.getMonth() - 6);
     return date.toISOString().split('T')[0];
   }
 

@@ -95,10 +95,22 @@
       </div>
 
       <div class="h-80">
-        <div *ngIf="timeData.length === 0" class="flex items-center justify-center h-full text-gray-400">
-          Não há dados temporais disponíveis
+        <div *ngIf="timeData.length === 0" class="flex flex-col items-center justify-center h-full text-gray-400">
+          <p>Não há dados temporais disponíveis</p>
+          <p class="text-xs mt-2">Tente alterar o período de datas ou o tipo de agrupamento</p>
         </div>
         <canvas *ngIf="timeData.length > 0" #timeChartCanvas height="300"></canvas>
+      </div>
+
+      <!-- Debug info - remover em produção se necessário -->
+      <div *ngIf="!loadingData && timeData.length === 0" class="mt-4 p-4 bg-yellow-50 border border-yellow-200 rounded-md">
+        <h4 class="text-sm font-medium text-yellow-800">Informações para solução de problemas:</h4>
+        <ul class="mt-2 text-xs text-yellow-700 list-disc list-inside">
+          <li>Verifique se existem posts no período selecionado</li>
+          <li>Tente utilizar o agrupamento diário para visualizar melhor os dados</li>
+          <li>Período atual: {{ startDate }} até {{ endDate }}</li>
+          <li>Agrupamento: {{ timeGranularity }}</li>
+        </ul>
       </div>
     </div>
   </div>
