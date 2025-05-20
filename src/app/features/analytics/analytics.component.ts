@@ -27,7 +27,7 @@ export class AnalyticsComponent implements OnInit {
   themeChart: Chart | null = null;
   timeChart: Chart | null = null;
 
-  timeGranularity: 'day' | 'week' | 'month' = 'week';
+  timeGranularity: 'day' | 'week' | 'month' = 'day';
   startDate: string = this.getDefaultStartDate();
   endDate: string = this.getDefaultEndDate();
 
@@ -80,26 +80,21 @@ export class AnalyticsComponent implements OnInit {
   }
 
   loadTimeSeriesData(): void {
+    // Iniciar o carregamento
+    this.loadingData = true;
+
     // Ensure dates are properly formatted
     const formattedStartDate = this.startDate ? this.startDate : this.getDefaultStartDate();
     const formattedEndDate = this.endDate ? this.endDate : this.getDefaultEndDate();
-
-    // Debug logs para diagnosticar o problema
-    console.log('Carregando dados temporais com parâmetros:', {
-      startDate: formattedStartDate,
-      endDate: formattedEndDate,
-      granularity: this.timeGranularity
-    });
 
     // Add error boundaries in case dates are invalid
     if (!formattedStartDate || !formattedEndDate) {
       this.hasError = true;
       this.errorMessage = 'Datas de início ou fim inválidas';
       this.timeData = [];
+      this.loadingData = false;
       return;
     }
-
-    this.loadingData = true; // Definir loading como true antes da chamada
 
     this.analyticsService.getPostsOverTime(
       formattedStartDate,
@@ -108,16 +103,6 @@ export class AnalyticsComponent implements OnInit {
     ).subscribe({
       next: (data) => {
         this.timeData = data;
-        console.log('Dados temporais recebidos:', data);
-
-        // Se não tiver dados com a granularidade atual, tentar com granularidade diferente
-        if (data.length === 0 && this.timeGranularity !== 'day') {
-          console.log('Tentando com granularidade diária para visualizar melhor os dados');
-          this.timeGranularity = 'day';
-          this.loadTimeSeriesData();
-          return;
-        }
-
         setTimeout(() => this.renderTimeChart(), 0);
         this.loadingData = false;
       },
@@ -244,10 +229,7 @@ export class AnalyticsComponent implements OnInit {
   }
 
   private renderTimeChart(): void {
-    if (!this.timeChartCanvas || this.timeData.length === 0) {
-      console.log('Não foi possível renderizar o gráfico: canvas não disponível ou sem dados');
-      return;
-    }
+    if (!this.timeChartCanvas || this.timeData.length === 0) return;
 
     const ctx = this.timeChartCanvas.nativeElement.getContext('2d');
     if (!ctx) return;
@@ -255,8 +237,6 @@ export class AnalyticsComponent implements OnInit {
     if (this.timeChart) {
       this.timeChart.destroy();
     }
-
-    console.log('Renderizando gráfico temporal com dados:', this.timeData);
 
     const labels = this.timeData.map(item => this.formatBucket(item.bucket));
     const data = this.timeData.map(item => item.totalPosts);
@@ -272,7 +252,10 @@ export class AnalyticsComponent implements OnInit {
           borderColor: 'rgba(99, 102, 241, 1)',
           borderWidth: 2,
           fill: true,
-          tension: 0.3
+          tension: 0.3,
+          pointBackgroundColor: 'rgba(99, 102, 241, 1)',
+          pointRadius: 4,
+          pointHoverRadius: 6
         }]
       },
       options: {
@@ -290,13 +273,11 @@ export class AnalyticsComponent implements OnInit {
             }
           },
           tooltip: {
+            mode: 'index',
+            intersect: false,
             callbacks: {
-              title: (tooltipItem) => {
-                const idx = tooltipItem[0].dataIndex;
-                return `Data: ${labels[idx]}`;
-              },
-              label: (tooltipItem) => {
-                return `Posts: ${tooltipItem.formattedValue}`;
+              label: function(context) {
+                return `Posts: ${context.raw}`;
               }
             }
           }
@@ -305,7 +286,14 @@ export class AnalyticsComponent implements OnInit {
           y: {
             beginAtZero: true,
             ticks: {
-              precision: 0
+              precision: 0,
+              stepSize: 1
+            }
+          },
+          x: {
+            grid: {
+              display: true,
+              drawOnChartArea: true
             }
           }
         }
@@ -316,10 +304,10 @@ export class AnalyticsComponent implements OnInit {
   private formatBucket(bucket: string): string {
     if (this.timeGranularity === 'day') {
       const [year, month, day] = bucket.split('-');
-      return `${day}/${month}/${year}`;
+      return `${day}/${month}`;
     } else if (this.timeGranularity === 'week') {
       const [year, week] = bucket.split('-');
-      return `Sem ${week}/${year}`;
+      return `Sem ${week}`;
     } else {
       const [year, month] = bucket.split('-');
       const monthNames = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
@@ -329,7 +317,6 @@ export class AnalyticsComponent implements OnInit {
 
   private getDefaultStartDate(): string {
     const date = new Date();
-    // Ajustando para abranger um período maior (6 meses)
     date.setMonth(date.getMonth() - 6);
     return date.toISOString().split('T')[0];
   }
