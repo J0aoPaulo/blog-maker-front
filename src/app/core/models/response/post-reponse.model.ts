@@ -10,5 +10,4 @@ export interface PostResponse {
   userId: string;
   userRole: string;
   userPhoto?: string;
-  userGender?: string;
 }

@@ -32,10 +32,10 @@
       <div class="flex items-center gap-2 mt-3">
         <div class="w-8 h-8 rounded-full overflow-hidden bg-gray-100">
           <img
-            [src]="post.userPhoto || 'https://avatar.iran.liara.run/public/48/' + post.name"
+            [src]="post.userPhoto || '/assets/male-placeholder.png'"
             alt="Avatar {{ post.name }}"
             class="w-full h-full object-cover"
-            onerror="this.src='https://avatar.iran.liara.run/public/48'"
+            onerror="this.src='/assets/male-placeholder.png'"
           />
         </div>
         <span class="text-xs text-gray-700">{{ post.name }}</span>

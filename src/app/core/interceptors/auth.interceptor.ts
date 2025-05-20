@@ -6,7 +6,7 @@ import {
   HttpInterceptor,
   HttpErrorResponse
 } from '@angular/common/http';
-import { Observable, catchError, tap, throwError } from 'rxjs';
+import { Observable, catchError, throwError } from 'rxjs';
 import { AuthService } from '../services/auth.service';
 import { Router } from '@angular/router';
 import { ToastService } from '../services/toast.service';
@@ -22,79 +22,56 @@ export class AuthInterceptor implements HttpInterceptor {
   intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
     const token = this.authService.getToken();
 
-    /*if (request.url.includes('/posts')) {
-      console.log(`[Interceptor] ${request.method} request to: ${request.url}`);
-      console.log('[Interceptor] Authorization token exists:', !!token);
-
-      if (request.params) {
-        const params = request.params.keys().map(key => `${key}=${request.params.get(key)}`).join('&');
-        console.log('[Interceptor] Request params:', params);
-      }
-
-      if (request.method === 'POST' || request.method === 'PUT') {
-        console.log('[Interceptor] Request body:', JSON.stringify(request.body));
-      }
-    }*/
-
     if (token) {
-      const authReq = request.clone({
-        setHeaders: {
-          Authorization: `Bearer ${token}`
+      return this.handleAuthenticatedRequest(request, next, token);
+    }
+
+    return this.handleUnauthenticatedRequest(request, next);
+  }
+
+  private handleAuthenticatedRequest(
+    request: HttpRequest<unknown>,
+    next: HttpHandler,
+    token: string
+  ): Observable<HttpEvent<unknown>> {
+    const authReq = request.clone({
+      setHeaders: {
+        Authorization: `Bearer ${token}`
+      }
+    });
+
+    return next.handle(authReq).pipe(
+      catchError((error: HttpErrorResponse) => {
+        if (error.status === 401) {
+          this.handleAuthenticationError();
         }
-      });
+        return throwError(() => error);
+      })
+    );
+  }
 
-      /*if (request.url.includes('/posts')) {
-        console.log('[Interceptor] Added auth token to request');
-      }*/
-
-      return next.handle(authReq).pipe(
-        tap(event => {
-          if (request.url.includes('/posts')) {
-            console.log('[Interceptor] Request successful');
-          }
-        }),
-        catchError((error: HttpErrorResponse) => {
-          if (request.url.includes('/posts')) {
-            console.error('[Interceptor] HTTP error:', error.status);
-            console.error('[Interceptor] Error URL:', request.url);
-            console.error('[Interceptor] Error details:', error);
-
-            if (error.error) {
-              if (typeof error.error === 'object') {
-                console.error('[Interceptor] Error message:', error.error.message || 'Unknown error');
-
-                if (error.error.errors) {
-                  console.error('[Interceptor] Validation errors:', error.error.errors);
-                }
-              }
-            }
-          }
-
-          if (error.status === 401) {
-            console.error('[Interceptor] Authentication error, logging out user');
-            this.authService.logout();
-            this.toastService.error('Sessão expirada. Por favor, faça login novamente.');
-            this.router.navigate(['/login']);
-          }
-
-          return throwError(() => error);
-        })
-      );
-    }
-
-    if (request.url.includes('/posts') && request.method !== 'GET') {
-      console.warn('[Interceptor] Attempting to access protected resource without token!');
-    }
-
+  private handleUnauthenticatedRequest(
+    request: HttpRequest<unknown>,
+    next: HttpHandler
+  ): Observable<HttpEvent<unknown>> {
     return next.handle(request).pipe(
       catchError((error: HttpErrorResponse) => {
-        if (request.url.includes('/posts') && error.status === 401) {
-          console.error('[Interceptor] Authentication required for this endpoint');
+        if (this.isProtectedPostRequest(request) && error.status === 401) {
           this.toastService.error('Autenticação necessária para acessar este recurso');
           this.router.navigate(['/login']);
         }
         return throwError(() => error);
       })
     );
+  }
+
+  private handleAuthenticationError(): void {
+    this.authService.logout();
+    this.toastService.error('Sessão expirada. Por favor, faça login novamente.');
+    this.router.navigate(['/login']);
+  }
+
+  private isProtectedPostRequest(request: HttpRequest<unknown>): boolean {
+    return request.url.includes('/posts') && request.method !== 'GET';
   }
 }

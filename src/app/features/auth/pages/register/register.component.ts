@@ -27,8 +27,7 @@ export class RegisterComponent {
       name: ['', [Validators.required, Validators.minLength(3)]],
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(6)]],
-      confirmPassword: ['', [Validators.required]],
-      gender: ['masculino', [Validators.required]]
+      confirmPassword: ['', [Validators.required]]
     }, {
       validators: this.passwordMatchValidator
     });
@@ -53,9 +52,9 @@ export class RegisterComponent {
     }
 
     this.loading = true;
-    const { name, email, password, gender } = this.registerForm.value;
+    const { name, email, password } = this.registerForm.value;
 
-    this.authService.register({ name, email, password, gender }).subscribe({
+    this.authService.register({ name, email, password }).subscribe({
       next: () => {
         this.toastService.success('Conta criada com sucesso! Faça login para continuar.');
         this.router.navigate(['/login']);
