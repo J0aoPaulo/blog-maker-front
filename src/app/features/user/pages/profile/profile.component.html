@@ -13,14 +13,8 @@
             >
             <div *ngIf="!previewUrl && !user?.photo" class="flex items-center justify-center h-full bg-gray-200">
               <img
-                *ngIf="user?.gender === 'feminino'"
-                src="/assets/female-placeholder.png"
-                alt="Avatar Feminino"
-                class="w-full h-full object-cover">
-              <img
-                *ngIf="user?.gender !== 'feminino'"
-                src="/assets/male-placeholder.png"
-                alt="Avatar Masculino"
+                src="https://avatar.iran.liara.run/public/48"
+                alt="Avatar"
                 class="w-full h-full object-cover">
             </div>
           </div>

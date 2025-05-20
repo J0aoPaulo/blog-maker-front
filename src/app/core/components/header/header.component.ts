@@ -55,18 +55,9 @@ import { Subscription } from 'rxjs';
                   class="w-full h-full object-cover"
                   onerror="this.onerror=null; this.style.display='none';"
                 />
-                <img
-                  *ngIf="!currentUser?.photo && currentUser?.gender === 'feminino'"
-                  src="/assets/female-placeholder.png"
-                  alt="Avatar Feminino"
-                  class="w-full h-full object-cover"
-                />
-                <img
-                  *ngIf="!currentUser?.photo && currentUser?.gender !== 'feminino'"
-                  src="/assets/male-placeholder.png"
-                  alt="Avatar Masculino"
-                  class="w-full h-full object-cover"
-                />
+                <svg *ngIf="!currentUser?.photo" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-500" viewBox="0 0 20 20" fill="currentColor">
+                  <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd" />
+                </svg>
               </div>
               <span class="text-sm font-medium text-gray-700 mx-3">{{ currentUser?.name || 'Usuário' }}</span>
               <button

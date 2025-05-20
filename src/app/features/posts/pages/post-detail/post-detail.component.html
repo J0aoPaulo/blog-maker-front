@@ -3,23 +3,10 @@
     <div class="flex items-center gap-4 mb-6">
       <div class="w-12 h-12 rounded-full overflow-hidden bg-gray-100">
         <img
-          *ngIf="post.userPhoto"
-          [src]="post.userPhoto"
+          [src]="post.userPhoto || 'https://avatar.iran.liara.run/public/48/' + post.name"
           alt="Avatar {{ post.name }}"
           class="w-full h-full object-cover"
-          (error)="onImgError($event)"
-        />
-        <img
-          *ngIf="!post.userPhoto && post.userGender === 'feminino'"
-          src="/assets/female-placeholder.png"
-          alt="Avatar Feminino"
-          class="w-full h-full object-cover"
-        />
-        <img
-          *ngIf="!post.userPhoto && post.userGender !== 'feminino'"
-          src="/assets/male-placeholder.png"
-          alt="Avatar Masculino"
-          class="w-full h-full object-cover"
+          onerror="this.src='https://avatar.iran.liara.run/public/48'"
         />
       </div>
       <div>

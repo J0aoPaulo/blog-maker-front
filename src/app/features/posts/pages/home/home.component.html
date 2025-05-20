@@ -11,22 +11,10 @@
         <div class="flex items-center gap-2 mt-3">
           <div class="w-8 h-8 rounded-full overflow-hidden bg-gray-200">
             <img
-              *ngIf="post.userPhoto"
-              [src]="post.userPhoto"
+              [src]="post.userPhoto || 'https://avatar.iran.liara.run/public/48/' + post.name"
               class="w-full h-full object-cover"
               alt="Autor"
-            />
-            <img
-              *ngIf="!post.userPhoto && post.userGender === 'feminino'"
-              src="/assets/female-placeholder.png"
-              alt="Avatar Feminino"
-              class="w-full h-full object-cover"
-            />
-            <img
-              *ngIf="!post.userPhoto && post.userGender !== 'feminino'"
-              src="/assets/male-placeholder.png"
-              alt="Avatar Masculino"
-              class="w-full h-full object-cover"
+              onerror="this.src='https://avatar.iran.liara.run/public/48'"
             />
           </div>
           <span class="text-xs text-gray-700">{{ post.name }}</span>
@@ -48,26 +36,7 @@
         <h3 class="text-lg font-semibold">{{ post.title }}</h3>
         <p class="text-gray-600 text-sm line-clamp-3 flex-grow">{{ post.content | slice:0:120 }}{{ post.content.length > 120 ? '…' : '' }}</p>
         <div class="flex items-center gap-2 mt-3">
-          <div class="w-8 h-8 rounded-full overflow-hidden bg-gray-200">
-            <img
-              *ngIf="post.userPhoto"
-              [src]="post.userPhoto"
-              class="w-full h-full object-cover"
-              alt="Autor"
-            />
-            <img
-              *ngIf="!post.userPhoto && post.userGender === 'feminino'"
-              src="/assets/female-placeholder.png"
-              alt="Avatar Feminino"
-              class="w-full h-full object-cover"
-            />
-            <img
-              *ngIf="!post.userPhoto && post.userGender !== 'feminino'"
-              src="/assets/male-placeholder.png"
-              alt="Avatar Masculino"
-              class="w-full h-full object-cover"
-            />
-          </div>
+          <img [src]="post.userPhoto || 'https://avatar.iran.liara.run/public/48/' + post.name" class="w-8 h-8 rounded-full" alt="Autor" onerror="this.src='https://avatar.iran.liara.run/public/48'"/>
           <span class="text-xs text-gray-700">{{ post.name }}</span>
           <span class="text-xs text-gray-400 ml-auto">{{ post.createdAt | date:'dd MMM, yyyy' }}</span>
         </div>
@@ -87,26 +56,7 @@
         <h3 class="text-lg font-semibold">{{ post.title }}</h3>
         <p class="text-gray-600 text-sm line-clamp-3 flex-grow">{{ post.content | slice:0:120 }}{{ post.content.length > 120 ? '…' : '' }}</p>
         <div class="flex items-center gap-2 mt-3">
-          <div class="w-8 h-8 rounded-full overflow-hidden bg-gray-200">
-            <img
-              *ngIf="post.userPhoto"
-              [src]="post.userPhoto"
-              class="w-full h-full object-cover"
-              alt="Autor"
-            />
-            <img
-              *ngIf="!post.userPhoto && post.userGender === 'feminino'"
-              src="/assets/female-placeholder.png"
-              alt="Avatar Feminino"
-              class="w-full h-full object-cover"
-            />
-            <img
-              *ngIf="!post.userPhoto && post.userGender !== 'feminino'"
-              src="/assets/male-placeholder.png"
-              alt="Avatar Masculino"
-              class="w-full h-full object-cover"
-            />
-          </div>
+          <img [src]="post.userPhoto || 'https://avatar.iran.liara.run/public/48/' + post.name" class="w-8 h-8 rounded-full" alt="Autor" onerror="this.src='https://avatar.iran.liara.run/public/48'"/>
           <span class="text-xs text-gray-700">{{ post.name }}</span>
           <span class="text-xs text-gray-400 ml-auto">{{ post.createdAt | date:'dd MMM, yyyy' }}</span>
         </div>
@@ -119,84 +69,6 @@
   </section>
 
   <section>
-    <h2 class="text-2xl font-bold mb-6">Git</h2>
-    <div *ngIf="gitPosts.length > 0; else noGitPosts" class="grid grid-cols-1 md:grid-cols-3 gap-8">
-      <div *ngFor="let post of gitPosts" class="bg-white rounded-xl shadow p-6 flex flex-col gap-3 hover:shadow-lg transition h-full">
-        <span class="inline-block bg-purple-100 text-purple-700 text-xs font-semibold rounded-full px-3 py-1">{{ post.theme || 'Sem tema' }}</span>
-        <h3 class="text-lg font-semibold">{{ post.title }}</h3>
-        <p class="text-gray-600 text-sm line-clamp-3 flex-grow">{{ post.content | slice:0:120 }}{{ post.content.length > 120 ? '…' : '' }}</p>
-        <div class="flex items-center gap-2 mt-3">
-          <div class="w-8 h-8 rounded-full overflow-hidden bg-gray-200">
-            <img
-              *ngIf="post.userPhoto"
-              [src]="post.userPhoto"
-              class="w-full h-full object-cover"
-              alt="Autor"
-            />
-            <img
-              *ngIf="!post.userPhoto && post.userGender === 'feminino'"
-              src="/assets/female-placeholder.png"
-              alt="Avatar Feminino"
-              class="w-full h-full object-cover"
-            />
-            <img
-              *ngIf="!post.userPhoto && post.userGender !== 'feminino'"
-              src="/assets/male-placeholder.png"
-              alt="Avatar Masculino"
-              class="w-full h-full object-cover"
-            />
-          </div>
-          <span class="text-xs text-gray-700">{{ post.name }}</span>
-          <span class="text-xs text-gray-400 ml-auto">{{ post.createdAt | date:'dd MMM, yyyy' }}</span>
-        </div>
-        <a [routerLink]="['/posts', post.id]" class="text-indigo-600 hover:text-indigo-800 text-xs font-medium mt-3">Ver detalhes →</a>
-      </div>
-    </div>
-    <ng-template #noGitPosts>
-      <div class="text-gray-400 italic">Nenhum post sobre Git encontrado.</div>
-    </ng-template>
-  </section>
-
-  <section>
-    <h2 class="text-2xl font-bold mb-6">Outros</h2>
-    <div *ngIf="outrosPosts.length > 0; else noOutrosPosts" class="grid grid-cols-1 md:grid-cols-3 gap-8">
-      <div *ngFor="let post of outrosPosts" class="bg-white rounded-xl shadow p-6 flex flex-col gap-3 hover:shadow-lg transition h-full">
-        <span class="inline-block bg-gray-100 text-gray-700 text-xs font-semibold rounded-full px-3 py-1">{{ post.theme || 'Sem tema' }}</span>
-        <h3 class="text-lg font-semibold">{{ post.title }}</h3>
-        <p class="text-gray-600 text-sm line-clamp-3 flex-grow">{{ post.content | slice:0:120 }}{{ post.content.length > 120 ? '…' : '' }}</p>
-        <div class="flex items-center gap-2 mt-3">
-          <div class="w-8 h-8 rounded-full overflow-hidden bg-gray-200">
-            <img
-              *ngIf="post.userPhoto"
-              [src]="post.userPhoto"
-              class="w-full h-full object-cover"
-              alt="Autor"
-            />
-            <img
-              *ngIf="!post.userPhoto && post.userGender === 'feminino'"
-              src="/assets/female-placeholder.png"
-              alt="Avatar Feminino"
-              class="w-full h-full object-cover"
-            />
-            <img
-              *ngIf="!post.userPhoto && post.userGender !== 'feminino'"
-              src="/assets/male-placeholder.png"
-              alt="Avatar Masculino"
-              class="w-full h-full object-cover"
-            />
-          </div>
-          <span class="text-xs text-gray-700">{{ post.name }}</span>
-          <span class="text-xs text-gray-400 ml-auto">{{ post.createdAt | date:'dd MMM, yyyy' }}</span>
-        </div>
-        <a [routerLink]="['/posts', post.id]" class="text-indigo-600 hover:text-indigo-800 text-xs font-medium mt-3">Ver detalhes →</a>
-      </div>
-    </div>
-    <ng-template #noOutrosPosts>
-      <div class="text-gray-400 italic">Nenhum post em outras categorias encontrado.</div>
-    </ng-template>
-  </section>
-
-  <section>
     <h2 class="text-2xl font-bold mb-6">Posts recentes</h2>
     <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
       <div *ngFor="let post of recentPosts" class="bg-white rounded-xl shadow p-6 flex flex-col gap-3 hover:shadow-lg transition h-full">
@@ -204,26 +76,7 @@
         <h3 class="text-lg font-semibold">{{ post.title }}</h3>
         <p class="text-gray-600 text-sm line-clamp-3 flex-grow">{{ post.content | slice:0:120 }}{{ post.content.length > 120 ? '…' : '' }}</p>
         <div class="flex items-center gap-2 mt-3">
-          <div class="w-8 h-8 rounded-full overflow-hidden bg-gray-200">
-            <img
-              *ngIf="post.userPhoto"
-              [src]="post.userPhoto"
-              class="w-full h-full object-cover"
-              alt="Autor"
-            />
-            <img
-              *ngIf="!post.userPhoto && post.userGender === 'feminino'"
-              src="/assets/female-placeholder.png"
-              alt="Avatar Feminino"
-              class="w-full h-full object-cover"
-            />
-            <img
-              *ngIf="!post.userPhoto && post.userGender !== 'feminino'"
-              src="/assets/male-placeholder.png"
-              alt="Avatar Masculino"
-              class="w-full h-full object-cover"
-            />
-          </div>
+          <img [src]="post.userPhoto || 'https://avatar.iran.liara.run/public/48/' + post.name" class="w-8 h-8 rounded-full" alt="Autor" onerror="this.src='https://avatar.iran.liara.run/public/48'"/>
           <span class="text-xs text-gray-700">{{ post.name }}</span>
           <span class="text-xs text-gray-400 ml-auto">{{ post.createdAt | date:'dd MMM, yyyy' }}</span>
         </div>

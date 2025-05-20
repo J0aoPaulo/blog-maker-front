@@ -22,8 +22,6 @@ export class PostDetailComponent implements OnInit {
   private authService = inject(AuthService);
   private toastService = inject(ToastService);
 
-  placeholderUrl = 'https://via.placeholder.com/48?text=?';
-
   ngOnInit() {
     const id = Number(this.route.snapshot.paramMap.get('id'));
     this.svc.getById(id).subscribe({
@@ -52,10 +50,6 @@ export class PostDetailComponent implements OnInit {
     } else {
       this.isAuthor = false;
     }
-  }
-
-  onImgError(event: Event) {
-    (event.target as HTMLImageElement).src = this.placeholderUrl;
   }
 
   editPost() {
