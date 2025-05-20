@@ -27,7 +27,7 @@ export class AnalyticsComponent implements OnInit {
   themeChart: Chart | null = null;
   timeChart: Chart | null = null;
 
-  timeGranularity: 'day' | 'week' | 'month' = 'day';
+  timeGranularity: 'day' | 'week' | 'month' = 'week';
   startDate: string = this.getDefaultStartDate();
   endDate: string = this.getDefaultEndDate();
 
@@ -80,35 +80,17 @@ export class AnalyticsComponent implements OnInit {
   }
 
   loadTimeSeriesData(): void {
-    // Iniciar o carregamento
-    this.loadingData = true;
-
-    // Ensure dates are properly formatted
-    const formattedStartDate = this.startDate ? this.startDate : this.getDefaultStartDate();
-    const formattedEndDate = this.endDate ? this.endDate : this.getDefaultEndDate();
-
-    // Add error boundaries in case dates are invalid
-    if (!formattedStartDate || !formattedEndDate) {
-      this.hasError = true;
-      this.errorMessage = 'Datas de início ou fim inválidas';
-      this.timeData = [];
-      this.loadingData = false;
-      return;
-    }
-
     this.analyticsService.getPostsOverTime(
-      formattedStartDate,
-      formattedEndDate,
+      this.startDate,
+      this.endDate,
       this.timeGranularity
     ).subscribe({
       next: (data) => {
         this.timeData = data;
         setTimeout(() => this.renderTimeChart(), 0);
-        this.loadingData = false;
       },
       error: (error) => {
         this.handleError('Não foi possível carregar dados temporais', error);
-        this.loadingData = false;
       }
     });
   }
@@ -252,10 +234,7 @@ export class AnalyticsComponent implements OnInit {
           borderColor: 'rgba(99, 102, 241, 1)',
           borderWidth: 2,
           fill: true,
-          tension: 0.3,
-          pointBackgroundColor: 'rgba(99, 102, 241, 1)',
-          pointRadius: 4,
-          pointHoverRadius: 6
+          tension: 0.3
         }]
       },
       options: {
@@ -271,29 +250,13 @@ export class AnalyticsComponent implements OnInit {
             font: {
               size: 16
             }
-          },
-          tooltip: {
-            mode: 'index',
-            intersect: false,
-            callbacks: {
-              label: function(context) {
-                return `Posts: ${context.raw}`;
-              }
-            }
           }
         },
         scales: {
           y: {
             beginAtZero: true,
             ticks: {
-              precision: 0,
-              stepSize: 1
-            }
-          },
-          x: {
-            grid: {
-              display: true,
-              drawOnChartArea: true
+              precision: 0
             }
           }
         }
@@ -317,7 +280,7 @@ export class AnalyticsComponent implements OnInit {
 
   private getDefaultStartDate(): string {
     const date = new Date();
-    date.setMonth(date.getMonth() - 6);
+    date.setMonth(date.getMonth() - 3);
     return date.toISOString().split('T')[0];
   }
 

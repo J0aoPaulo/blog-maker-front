@@ -51,7 +51,7 @@
 
     <button
       *ngIf="isAuthor"
-      (click)="deletePost()"
+      (click)="confirmDeletePost()"
       class="text-red-600 hover:text-red-800 text-xs"
       title="Excluir post"
     >
@@ -61,3 +61,12 @@
     </button>
   </div>
 </article>
+
+<app-confirm-dialog
+  [visible]="showDeleteDialog"
+  title="Excluir post"
+  message="Tem certeza que deseja excluir este post?"
+  confirmButtonText="Excluir"
+  (confirm)="onDeleteConfirmed()"
+  (cancel)="onDeleteCancelled()"
+></app-confirm-dialog>

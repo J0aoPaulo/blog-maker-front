@@ -16,6 +16,8 @@ import { LoadingComponent } from '../../../../shared/components/loading/loading.
 export class RegisterComponent {
   registerForm: FormGroup;
   loading = false;
+  passwordVisible = false;
+  confirmPasswordVisible = false;
 
   constructor(
     private fb: FormBuilder,
@@ -45,9 +47,23 @@ export class RegisterComponent {
     return null;
   }
 
+  togglePasswordVisibility(): void {
+    this.passwordVisible = !this.passwordVisible;
+  }
+
+  toggleConfirmPasswordVisibility(): void {
+    this.confirmPasswordVisible = !this.confirmPasswordVisible;
+  }
+
   onSubmit(): void {
     if (this.registerForm.invalid) {
       this.registerForm.markAllAsTouched();
+
+      // Show a toast message if passwords don't match
+      if (this.registerForm.hasError('passwordMismatch') ||
+          this.registerForm.get('confirmPassword')?.hasError('passwordMismatch')) {
+        this.toastService.error('As senhas não coincidem. Por favor, verifique e tente novamente.');
+      }
       return;
     }
 
@@ -60,8 +76,17 @@ export class RegisterComponent {
         this.router.navigate(['/login']);
       },
       error: (error) => {
-        this.toastService.error(error.message || 'Erro ao criar conta');
         this.loading = false;
+
+        if (error.status === 409) {
+          this.toastService.error('Este e-mail já está em uso. Tente outro ou faça login.');
+          this.registerForm.get('email')?.setErrors({ emailInUse: true });
+        } else if (error.message?.includes('password')) {
+          this.toastService.error('A senha não atende aos requisitos de segurança. Use pelo menos 6 caracteres.');
+          this.registerForm.get('password')?.setErrors({ weakPassword: true });
+        } else {
+          this.toastService.error(error.message || 'Erro ao criar conta. Tente novamente.');
+        }
       },
       complete: () => {
         this.loading = false;
@@ -76,11 +101,13 @@ export class RegisterComponent {
 
     if (field.hasError('required')) return 'Campo obrigatório';
     if (field.hasError('email')) return 'Email inválido';
+    if (field.hasError('emailInUse')) return 'Email já está em uso';
     if (field.hasError('minlength')) {
       const minLength = field.errors?.['minlength']?.requiredLength;
       return `Mínimo de ${minLength} caracteres`;
     }
     if (field.hasError('passwordMismatch')) return 'As senhas não coincidem';
+    if (field.hasError('weakPassword')) return 'Senha muito fraca';
 
     return 'Campo inválido';
   }

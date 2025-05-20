@@ -10,3 +10,34 @@ input.ng-touched.ng-invalid {
 input.ng-touched.ng-valid {
   border-color: #10b981;
 }
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-5px); }
+  75% { transform: translateX(5px); }
+}
+
+input.ng-invalid.password-error {
+  animation: shake 0.2s 2;
+  border-color: #ef4444;
+  background-color: #fee2e2;
+}
+
+.password-toggle {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  color: #6b7280;
+  cursor: pointer;
+}
+
+.password-toggle:hover {
+  color: #4b5563;
+}
+
+.password-toggle:focus {
+  outline: none;
+}

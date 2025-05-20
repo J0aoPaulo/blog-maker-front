@@ -14,7 +14,6 @@
   </div>
 
   <div *ngIf="!loadingData && !hasError">
-    <!-- Cards de resumo -->
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
       <div class="bg-indigo-50 rounded-lg p-6 text-center shadow-sm">
         <div class="text-indigo-600 font-bold text-3xl mb-1">{{ summary?.totalPosts || 0 }}</div>
@@ -32,9 +31,7 @@
       </div>
     </div>
 
-    <!-- Gráficos -->
     <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
-      <!-- Gráfico de Posts por Autor -->
       <div class="bg-white rounded-lg shadow-sm p-4 h-80">
         <div *ngIf="authorData.length === 0" class="flex items-center justify-center h-full text-gray-400">
           Não há dados de autores disponíveis
@@ -42,7 +39,6 @@
         <canvas *ngIf="authorData.length > 0" #authorChartCanvas height="300"></canvas>
       </div>
 
-      <!-- Gráfico de Posts por Tema -->
       <div class="bg-white rounded-lg shadow-sm p-4 h-80">
         <div *ngIf="themeData.length === 0" class="flex items-center justify-center h-full text-gray-400">
           Não há dados de temas disponíveis
@@ -51,7 +47,6 @@
       </div>
     </div>
 
-    <!-- Gráfico temporal com filtros -->
     <div class="bg-white rounded-lg shadow-sm p-4 mb-8">
       <div class="mb-4 flex flex-wrap gap-4">
         <div>
@@ -95,9 +90,8 @@
       </div>
 
       <div class="h-80">
-        <div *ngIf="timeData.length === 0" class="flex flex-col items-center justify-center h-full text-gray-400">
-          <p>Não há dados temporais disponíveis</p>
-          <p class="text-xs mt-2">Tente alterar o período de datas ou o tipo de agrupamento</p>
+        <div *ngIf="timeData.length === 0" class="flex items-center justify-center h-full text-gray-400">
+          Não há dados temporais disponíveis
         </div>
         <canvas *ngIf="timeData.length > 0" #timeChartCanvas height="300"></canvas>
       </div>

@@ -174,7 +174,23 @@ export class PostFormComponent implements OnInit {
               console.error('Detalhes do erro:', JSON.stringify(err.error));
             }
 
-            this.toastService.error(`Erro ao criar o post: ${err.status === 500 ? 'Erro interno no servidor' : err.error?.message || 'Erro desconhecido'}`);
+            if (err.status === 409 || (err.error?.message && err.error.message.includes('duplicado'))) {
+              this.toastService.error('Já existe um post com conteúdo similar. Por favor, modifique o conteúdo para evitar duplicação.');
+            } else if (err.status === 400) {
+              if (err.error?.message?.includes('título')) {
+                this.toastService.error('Título inválido. Verifique e tente novamente.');
+              } else if (err.error?.message?.includes('conteúdo')) {
+                this.toastService.error('Conteúdo inválido. Verifique e tente novamente.');
+              } else {
+                this.toastService.error('Dados inválidos. Verifique os campos e tente novamente.');
+              }
+            } else if (err.status === 403) {
+              this.toastService.error('Você não tem permissão para criar posts.');
+            } else if (err.status === 0) {
+              this.toastService.error('Não foi possível conectar ao servidor. Verifique sua conexão com a internet.');
+            } else {
+              this.toastService.error(`Erro ao criar o post: ${err.status === 500 ? 'Erro interno no servidor' : err.error?.message || 'Erro desconhecido'}`);
+            }
 
             if (err.error?.errors) {
               for (const [field, msg] of Object.entries(err.error.errors)) {
@@ -185,7 +201,7 @@ export class PostFormComponent implements OnInit {
               }
             }
           }
-      });
+        });
     }
   }
 

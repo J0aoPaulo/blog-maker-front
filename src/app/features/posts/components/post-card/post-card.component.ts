@@ -5,17 +5,19 @@ import { PostService } from '../../../../core/services/post.service';
 import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../../../../core/services/auth.service';
 import { ToastService } from '../../../../core/services/toast.service';
+import { ConfirmDialogComponent } from '../../../../shared/components/confirm-dialog/confirm-dialog.component';
 
 @Component({
   selector: 'app-post-card',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, ConfirmDialogComponent],
   templateUrl: './post-card.component.html',
   styleUrls: ['./post-card.component.css'],
 })
 export class PostCardComponent implements OnInit {
   @Input() post!: PostResponse;
   isAuthor = false;
+  showDeleteDialog = false;
 
   private svc = inject(PostService)
   private router = inject(Router)
@@ -41,25 +43,31 @@ export class PostCardComponent implements OnInit {
       : this.post.content;
   }
 
-  deletePost() {
+  confirmDeletePost() {
+    this.showDeleteDialog = true;
+  }
+
+  onDeleteConfirmed() {
     if (!this.isAuthor) {
       this.toastService.error('Você não tem permissão para excluir este post');
       return;
     }
 
-    if (confirm('Tem certeza que deseja excluir este post?')) {
-      this.svc.delete(this.post.id).subscribe({
-        next: () => {
-          this.toastService.success('Post excluído com sucesso');
-          // recarrega rota atual
-          this.router.navigateByUrl('/posts', { skipLocationChange: true })
-            .then(() => this.router.navigate(['/posts']));
-        },
-        error: (err) => {
-          console.error('Erro ao excluir post:', err);
-          this.toastService.error('Não foi possível excluir o post. Tente novamente mais tarde.');
-        }
-      });
-    }
+    this.svc.delete(this.post.id).subscribe({
+      next: () => {
+        this.toastService.success('Post excluído com sucesso');
+        // recarrega rota atual
+        this.router.navigateByUrl('/posts', { skipLocationChange: true })
+          .then(() => this.router.navigate(['/posts']));
+      },
+      error: (err) => {
+        console.error('Erro ao excluir post:', err);
+        this.toastService.error('Não foi possível excluir o post. Tente novamente mais tarde.');
+      }
+    });
+  }
+
+  onDeleteCancelled() {
+    this.showDeleteDialog = false;
   }
 }
