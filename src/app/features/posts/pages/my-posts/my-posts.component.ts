@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, OnDestroy, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
 import { PostService } from '../../../../core/services/post.service';
@@ -8,6 +8,7 @@ import { LoadingComponent } from '../../../../shared/components/loading/loading.
 import { EmptyStateComponent } from '../../../../shared/components/empty-state/empty-state.component';
 import { ToastService } from '../../../../core/services/toast.service';
 import { ConfirmDialogComponent } from '../../../../shared/components/confirm-dialog/confirm-dialog.component';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-my-posts',
@@ -16,19 +17,24 @@ import { ConfirmDialogComponent } from '../../../../shared/components/confirm-di
   templateUrl: './my-posts.component.html',
   styleUrls: ['./my-posts.component.css']
 })
-export class MyPostsComponent implements OnInit {
+export class MyPostsComponent implements OnInit, OnDestroy {
   myPosts: PostResponse[] = [];
   loading = false;
   showDeleteDialog = false;
   postToDelete: PostResponse | null = null;
+  private readonly subscriptions = new Subscription();
 
-  private postService = inject(PostService);
-  private authService = inject(AuthService);
-  private toastService = inject(ToastService);
-  private router = inject(Router);
+  private readonly postService = inject(PostService);
+  private readonly authService = inject(AuthService);
+  private readonly toastService = inject(ToastService);
+  private readonly router = inject(Router);
 
   ngOnInit() {
     this.loadMyPosts();
+  }
+
+  ngOnDestroy() {
+    this.subscriptions.unsubscribe();
   }
 
   private loadMyPosts() {
@@ -41,7 +47,7 @@ export class MyPostsComponent implements OnInit {
 
     this.loading = true;
 
-    this.postService.filter(currentUser.id).subscribe({
+    const sub = this.postService.filter(currentUser.id).subscribe({
       next: posts => {
         this.myPosts = posts;
         this.loading = false;
@@ -53,6 +59,17 @@ export class MyPostsComponent implements OnInit {
         this.loading = false;
       }
     });
+
+    this.subscriptions.add(sub);
+  }
+
+  handleImageError(event: Event): void {
+    const target = event.target as HTMLImageElement;
+    target.src = this.getPlaceholderImage();
+  }
+
+  getPlaceholderImage(): string {
+    return 'assets/male-placeholder.png';
   }
 
   confirmDeletePost(post: PostResponse) {
@@ -63,7 +80,7 @@ export class MyPostsComponent implements OnInit {
   onDeleteConfirmed() {
     if (!this.postToDelete) return;
 
-    this.postService.delete(this.postToDelete.id).subscribe({
+    const sub = this.postService.delete(this.postToDelete.id).subscribe({
       next: () => {
         this.toastService.success('Post excluído com sucesso');
         // Atualizar a lista de posts
@@ -77,6 +94,8 @@ export class MyPostsComponent implements OnInit {
         this.showDeleteDialog = false;
       }
     });
+
+    this.subscriptions.add(sub);
   }
 
   onDeleteCancelled() {

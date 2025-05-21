@@ -1,8 +1,9 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, OnDestroy, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { PostService } from '../../../../core/services/post.service';
 import { PostResponse } from '../../../../core/models/response/post-reponse.model';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-home',
@@ -11,23 +12,37 @@ import { PostResponse } from '../../../../core/models/response/post-reponse.mode
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css']
 })
-export class HomeComponent implements OnInit {
+export class HomeComponent implements OnInit, OnDestroy {
   angularPosts: PostResponse[] = [];
   springPosts: PostResponse[] = [];
   reactPosts: PostResponse[] = [];
   gitPosts: PostResponse[] = [];
   outrosPosts: PostResponse[] = [];
   recentPosts: PostResponse[] = [];
+  private readonly subscriptions = new Subscription();
 
-  private postService = inject(PostService);
+  private readonly postService = inject(PostService);
 
   ngOnInit() {
     this.carregarPostsPorTema();
     this.carregarPostsRecentes();
   }
 
+  ngOnDestroy() {
+    this.subscriptions.unsubscribe();
+  }
+
+  handleImageError(event: Event): void {
+    const target = event.target as HTMLImageElement;
+    target.src = this.getPlaceholderImage();
+  }
+
+  getPlaceholderImage(): string {
+    return 'assets/male-placeholder.png';
+  }
+
   private carregarPostsPorTema() {
-    this.postService.getAll().subscribe({
+    const sub = this.postService.getAll().subscribe({
       next: (posts) => {
         this.angularPosts = posts
           .filter(p => p.theme?.toLowerCase().includes('angular'))
@@ -47,7 +62,7 @@ export class HomeComponent implements OnInit {
 
         this.outrosPosts = posts
           .filter(p => {
-            const theme = p.theme?.toLowerCase() || '';
+            const theme = p.theme?.toLowerCase() ?? '';
             return !theme.includes('angular') &&
                    !theme.includes('spring') &&
                    !theme.includes('react') &&
@@ -59,18 +74,23 @@ export class HomeComponent implements OnInit {
         console.error('Erro ao carregar posts:', erro);
       }
     });
+
+    this.subscriptions.add(sub);
   }
 
   private carregarPostsRecentes() {
-    this.postService.getAll().subscribe({
+    const sub = this.postService.getAll().subscribe({
       next: (posts) => {
-        this.recentPosts = posts
-          .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
-          .slice(0, 3);
+        const sortedPosts = [...posts].sort((a, b) =>
+          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+        );
+        this.recentPosts = sortedPosts.slice(0, 3);
       },
       error: (erro) => {
         console.error('Erro ao carregar posts recentes:', erro);
       }
     });
+
+    this.subscriptions.add(sub);
   }
 }

@@ -1,9 +1,10 @@
-import { Component, ElementRef, OnInit, ViewChild, inject } from '@angular/core';
+import { Component, ElementRef, OnInit, OnDestroy, ViewChild, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AnalyticsService, AuthorPostCountDTO, SummaryDTO, ThemePostCountDTO, TimeBucketDTO } from '../../core/services/analytics.service';
 import { Chart, registerables } from 'chart.js';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
+import { Subscription } from 'rxjs';
 Chart.register(...registerables);
 
 @Component({
@@ -13,7 +14,7 @@ Chart.register(...registerables);
   templateUrl: './analytics.component.html',
   styleUrls: ['./analytics.component.css']
 })
-export class AnalyticsComponent implements OnInit {
+export class AnalyticsComponent implements OnInit, OnDestroy {
   @ViewChild('authorChartCanvas') authorChartCanvas!: ElementRef<HTMLCanvasElement>;
   @ViewChild('themeChartCanvas') themeChartCanvas!: ElementRef<HTMLCanvasElement>;
   @ViewChild('timeChartCanvas') timeChartCanvas!: ElementRef<HTMLCanvasElement>;
@@ -35,17 +36,31 @@ export class AnalyticsComponent implements OnInit {
   hasError = false;
   errorMessage = '';
 
-  private analyticsService = inject(AnalyticsService);
+  private readonly subscriptions = new Subscription();
+  private readonly analyticsService = inject(AnalyticsService);
 
   ngOnInit(): void {
     this.loadAllData();
+  }
+
+  ngOnDestroy(): void {
+    if (this.authorChart) {
+      this.authorChart.destroy();
+    }
+    if (this.themeChart) {
+      this.themeChart.destroy();
+    }
+    if (this.timeChart) {
+      this.timeChart.destroy();
+    }
+    this.subscriptions.unsubscribe();
   }
 
   loadAllData(): void {
     this.loadingData = true;
     this.hasError = false;
 
-    this.analyticsService.getSummary().subscribe({
+    const summarySubscription = this.analyticsService.getSummary().subscribe({
       next: (data) => {
         this.summary = data;
       },
@@ -53,8 +68,9 @@ export class AnalyticsComponent implements OnInit {
         this.handleError('Não foi possível carregar o resumo', error);
       }
     });
+    this.subscriptions.add(summarySubscription);
 
-    this.analyticsService.getPostsByAuthor().subscribe({
+    const authorSubscription = this.analyticsService.getPostsByAuthor().subscribe({
       next: (data) => {
         this.authorData = data;
         setTimeout(() => this.renderAuthorChart(), 0);
@@ -63,8 +79,9 @@ export class AnalyticsComponent implements OnInit {
         this.handleError('Não foi possível carregar dados por autor', error);
       }
     });
+    this.subscriptions.add(authorSubscription);
 
-    this.analyticsService.getPostsByTheme().subscribe({
+    const themeSubscription = this.analyticsService.getPostsByTheme().subscribe({
       next: (data) => {
         this.themeData = data;
         setTimeout(() => this.renderThemeChart(), 0);
@@ -73,6 +90,7 @@ export class AnalyticsComponent implements OnInit {
         this.handleError('Não foi possível carregar dados por tema', error);
       }
     });
+    this.subscriptions.add(themeSubscription);
 
     this.loadTimeSeriesData();
 
@@ -80,7 +98,7 @@ export class AnalyticsComponent implements OnInit {
   }
 
   loadTimeSeriesData(): void {
-    this.analyticsService.getPostsOverTime(
+    const timeSubscription = this.analyticsService.getPostsOverTime(
       this.startDate,
       this.endDate,
       this.timeGranularity
@@ -93,6 +111,7 @@ export class AnalyticsComponent implements OnInit {
         this.handleError('Não foi possível carregar dados temporais', error);
       }
     });
+    this.subscriptions.add(timeSubscription);
   }
 
   updateTimeChart(): void {
@@ -265,16 +284,15 @@ export class AnalyticsComponent implements OnInit {
   }
 
   private formatBucket(bucket: string): string {
+    const parts = bucket.split('-');
+
     if (this.timeGranularity === 'day') {
-      const [year, month, day] = bucket.split('-');
-      return `${day}/${month}`;
+      return `${parts[2]}/${parts[1]}`;
     } else if (this.timeGranularity === 'week') {
-      const [year, week] = bucket.split('-');
-      return `Sem ${week}`;
+      return `Sem ${parts[1]}`;
     } else {
-      const [year, month] = bucket.split('-');
-      const monthNames = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
-      return `${monthNames[parseInt(month, 10) - 1]}/${year}`;
+      const monthNames = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'] as const;
+      return `${monthNames[parseInt(parts[1], 10) - 1]}/${parts[0]}`;
     }
   }
 

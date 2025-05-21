@@ -234,8 +234,9 @@ export class SidebarComponent implements OnInit, OnDestroy {
   isCollapsed = false;
   isDesktop = false;
   private userSubscription: Subscription | null = null;
+  private readonly assetPath = '/assets/male-placeholder.png';
 
-  constructor(private authService: AuthService) {}
+  constructor(private readonly authService: AuthService) {}
 
   @HostListener('window:resize', ['$event'])
   onResize() {
@@ -296,6 +297,6 @@ export class SidebarComponent implements OnInit, OnDestroy {
 
   handleImageError(event: Event): void {
     const target = event.target as HTMLImageElement;
-    target.src = '/assets/male-placeholder.png';
+    target.src = this.assetPath;
   }
 }

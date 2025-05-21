@@ -3,10 +3,10 @@
     <div class="flex items-center gap-4 mb-6">
       <div class="w-12 h-12 rounded-full overflow-hidden bg-gray-100">
         <img
-          [src]="post.userPhoto || '/assets/male-placeholder.png'"
+          [src]="post.userPhoto || getPlaceholderImage()"
           alt="Avatar {{ post.name }}"
           class="w-full h-full object-cover"
-          onerror="this.src='/assets/male-placeholder.png'"
+          (error)="handleImageError($event)"
         />
       </div>
       <div>
