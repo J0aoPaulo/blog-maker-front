@@ -92,6 +92,21 @@ export class AuthService {
         }),
         catchError(error => {
           console.error('Login error:', error);
+
+          if (error.status === 401 ||
+              (error.status === 500 && error.error &&
+               (error.error.toString().includes('credentials') ||
+                error.error.toString().includes('senha') ||
+                error.error.toString().includes('usuário') ||
+                error.error.toString().includes('password') ||
+                error.error.toString().includes('login')))) {
+
+            return throwError(() => ({
+              status: 401,
+              message: 'Credenciais incorretas. Verifique seu email e senha.'
+            }));
+          }
+
           return throwError(() => new Error(error.error?.message || 'Falha ao realizar login. Verifique suas credenciais.'));
         })
       );

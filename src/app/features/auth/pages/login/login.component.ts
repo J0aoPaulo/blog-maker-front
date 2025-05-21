@@ -49,32 +49,40 @@ export class LoginComponent {
         this.toastService.success('Login realizado com sucesso!');
         this.router.navigate(['/']);
       },
-      error: (error: HttpErrorResponse) => {
+      error: (error: HttpErrorResponse | any) => {
         this.loading = false;
 
-        if (error.status === 401) {
-          this.loginAttempts++;
-          this.passwordError = true;
+        if (error && typeof error === 'object' && 'status' in error) {
+          const status = error.status;
+          const message = error.message || 'Erro desconhecido';
 
-          setTimeout(() => {
-            const passwordField = document.getElementById('password');
-            if (passwordField) passwordField.focus();
-          }, 100);
+          if (status === 401 || (message && message.toLowerCase().includes('credenciais'))) {
+            this.loginAttempts++;
+            this.passwordError = true;
 
-          if (this.loginAttempts >= 3) {
-            this.toastService.error('Várias tentativas incorretas. Verifique sua senha com cuidado ou use a opção "Esqueci minha senha".');
+            setTimeout(() => {
+              const passwordField = document.getElementById('password');
+              if (passwordField) passwordField.focus();
+            }, 100);
+
+            if (this.loginAttempts >= 3) {
+              this.toastService.error('Várias tentativas incorretas. Verifique sua senha com cuidado ou use a opção "Esqueci minha senha".');
+            } else {
+              this.toastService.error('Senha incorreta. Por favor, verifique e tente novamente.');
+            }
+
+            this.loginForm.get('password')?.setErrors({ incorrect: true });
+          } else if (status === 404) {
+            this.toastService.error('E-mail não cadastrado. Verifique ou crie uma nova conta.');
+            this.loginForm.get('email')?.setErrors({ notFound: true });
+          } else if (status === 0) {
+            this.toastService.error('Não foi possível conectar ao servidor. Verifique sua conexão com a internet.');
           } else {
-            this.toastService.error('Senha incorreta. Por favor, verifique e tente novamente.');
+            this.toastService.error(message || 'Erro ao realizar login. Verifique suas credenciais e tente novamente.');
           }
-
-          this.loginForm.get('password')?.setErrors({ incorrect: true });
-        } else if (error.status === 404) {
-          this.toastService.error('E-mail não cadastrado. Verifique ou crie uma nova conta.');
-          this.loginForm.get('email')?.setErrors({ notFound: true });
-        } else if (error.status === 0) {
-          this.toastService.error('Não foi possível conectar ao servidor. Verifique sua conexão com a internet.');
         } else {
-          this.toastService.error(error.message || 'Erro ao realizar login. Tente novamente mais tarde.');
+          console.error('Erro de formato inesperado:', error);
+          this.toastService.error('Erro ao realizar login, verifique suas credenciais e tente novamente.');
         }
       },
       complete: () => {

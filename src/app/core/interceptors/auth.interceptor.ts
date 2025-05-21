@@ -56,10 +56,15 @@ export class AuthInterceptor implements HttpInterceptor {
   ): Observable<HttpEvent<unknown>> {
     return next.handle(request).pipe(
       catchError((error: HttpErrorResponse) => {
+        if (request.url.includes('/login')) {
+          return throwError(() => error);
+        }
+
         if (this.isProtectedPostRequest(request) && error.status === 401) {
           this.toastService.error('Autenticação necessária para acessar este recurso');
           this.router.navigate(['/login']);
         }
+
         return throwError(() => error);
       })
     );
