@@ -9,7 +9,14 @@
         <h3 class="text-lg font-semibold">{{ post.title }}</h3>
         <p class="text-gray-600 text-sm line-clamp-3 flex-grow">{{ post.content | slice:0:120 }}{{ post.content.length > 120 ? '…' : '' }}</p>
         <div class="flex items-center gap-2 mt-3">
-          <img [src]="post.userPhoto || 'https://avatar.iran.liara.run/public/48/' + post.name" class="w-8 h-8 rounded-full" alt="Autor" onerror="this.src='https://avatar.iran.liara.run/public/48'"/>
+          <div class="w-8 h-8 rounded-full overflow-hidden bg-gray-200">
+            <img
+              [src]="post.userPhoto || '/assets/male-placeholder.png'"
+              class="w-full h-full object-cover"
+              alt="Autor"
+              onerror="this.src='/assets/male-placeholder.png'"
+            />
+          </div>
           <span class="text-xs text-gray-700">{{ post.name }}</span>
           <span class="text-xs text-gray-400 ml-auto">{{ post.createdAt | date:'dd MMM, yyyy' }}</span>
         </div>
@@ -29,7 +36,7 @@
         <h3 class="text-lg font-semibold">{{ post.title }}</h3>
         <p class="text-gray-600 text-sm line-clamp-3 flex-grow">{{ post.content | slice:0:120 }}{{ post.content.length > 120 ? '…' : '' }}</p>
         <div class="flex items-center gap-2 mt-3">
-          <img [src]="post.userPhoto || 'https://avatar.iran.liara.run/public/48/' + post.name" class="w-8 h-8 rounded-full" alt="Autor" onerror="this.src='https://avatar.iran.liara.run/public/48'"/>
+          <img [src]="post.userPhoto || '/assets/male-placeholder.png'" class="w-8 h-8 rounded-full" alt="Autor" onerror="this.src='/assets/male-placeholder.png'"/>
           <span class="text-xs text-gray-700">{{ post.name }}</span>
           <span class="text-xs text-gray-400 ml-auto">{{ post.createdAt | date:'dd MMM, yyyy' }}</span>
         </div>
@@ -49,7 +56,7 @@
         <h3 class="text-lg font-semibold">{{ post.title }}</h3>
         <p class="text-gray-600 text-sm line-clamp-3 flex-grow">{{ post.content | slice:0:120 }}{{ post.content.length > 120 ? '…' : '' }}</p>
         <div class="flex items-center gap-2 mt-3">
-          <img [src]="post.userPhoto || 'https://avatar.iran.liara.run/public/48/' + post.name" class="w-8 h-8 rounded-full" alt="Autor" onerror="this.src='https://avatar.iran.liara.run/public/48'"/>
+          <img [src]="post.userPhoto || '/assets/male-placeholder.png'" class="w-8 h-8 rounded-full" alt="Autor" onerror="this.src='/assets/male-placeholder.png'"/>
           <span class="text-xs text-gray-700">{{ post.name }}</span>
           <span class="text-xs text-gray-400 ml-auto">{{ post.createdAt | date:'dd MMM, yyyy' }}</span>
         </div>
@@ -62,6 +69,46 @@
   </section>
 
   <section>
+    <h2 class="text-2xl font-bold mb-6">Git</h2>
+    <div *ngIf="gitPosts.length > 0; else noGitPosts" class="grid grid-cols-1 md:grid-cols-3 gap-8">
+      <div *ngFor="let post of gitPosts" class="bg-white rounded-xl shadow p-6 flex flex-col gap-3 hover:shadow-lg transition h-full">
+        <span class="inline-block bg-amber-100 text-amber-700 text-xs font-semibold rounded-full px-3 py-1">{{ post.theme || 'Sem tema' }}</span>
+        <h3 class="text-lg font-semibold">{{ post.title }}</h3>
+        <p class="text-gray-600 text-sm line-clamp-3 flex-grow">{{ post.content | slice:0:120 }}{{ post.content.length > 120 ? '…' : '' }}</p>
+        <div class="flex items-center gap-2 mt-3">
+          <img [src]="post.userPhoto || '/assets/male-placeholder.png'" class="w-8 h-8 rounded-full" alt="Autor" onerror="this.src='/assets/male-placeholder.png'"/>
+          <span class="text-xs text-gray-700">{{ post.name }}</span>
+          <span class="text-xs text-gray-400 ml-auto">{{ post.createdAt | date:'dd MMM, yyyy' }}</span>
+        </div>
+        <a [routerLink]="['/posts', post.id]" class="text-indigo-600 hover:text-indigo-800 text-xs font-medium mt-3">Ver detalhes →</a>
+      </div>
+    </div>
+    <ng-template #noGitPosts>
+      <div class="text-gray-400 italic">Nenhum post sobre Git encontrado.</div>
+    </ng-template>
+  </section>
+
+  <section>
+    <h2 class="text-2xl font-bold mb-6">Outros</h2>
+    <div *ngIf="outrosPosts.length > 0; else noOutrosPosts" class="grid grid-cols-1 md:grid-cols-3 gap-8">
+      <div *ngFor="let post of outrosPosts" class="bg-white rounded-xl shadow p-6 flex flex-col gap-3 hover:shadow-lg transition h-full">
+        <span class="inline-block bg-purple-100 text-purple-700 text-xs font-semibold rounded-full px-3 py-1">{{ post.theme || 'Sem tema' }}</span>
+        <h3 class="text-lg font-semibold">{{ post.title }}</h3>
+        <p class="text-gray-600 text-sm line-clamp-3 flex-grow">{{ post.content | slice:0:120 }}{{ post.content.length > 120 ? '…' : '' }}</p>
+        <div class="flex items-center gap-2 mt-3">
+          <img [src]="post.userPhoto || '/assets/male-placeholder.png'" class="w-8 h-8 rounded-full" alt="Autor" onerror="this.src='/assets/male-placeholder.png'"/>
+          <span class="text-xs text-gray-700">{{ post.name }}</span>
+          <span class="text-xs text-gray-400 ml-auto">{{ post.createdAt | date:'dd MMM, yyyy' }}</span>
+        </div>
+        <a [routerLink]="['/posts', post.id]" class="text-indigo-600 hover:text-indigo-800 text-xs font-medium mt-3">Ver detalhes →</a>
+      </div>
+    </div>
+    <ng-template #noOutrosPosts>
+      <div class="text-gray-400 italic">Nenhum post de outras categorias encontrado.</div>
+    </ng-template>
+  </section>
+
+  <section>
     <h2 class="text-2xl font-bold mb-6">Posts recentes</h2>
     <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
       <div *ngFor="let post of recentPosts" class="bg-white rounded-xl shadow p-6 flex flex-col gap-3 hover:shadow-lg transition h-full">
@@ -69,7 +116,7 @@
         <h3 class="text-lg font-semibold">{{ post.title }}</h3>
         <p class="text-gray-600 text-sm line-clamp-3 flex-grow">{{ post.content | slice:0:120 }}{{ post.content.length > 120 ? '…' : '' }}</p>
         <div class="flex items-center gap-2 mt-3">
-          <img [src]="post.userPhoto || 'https://avatar.iran.liara.run/public/48/' + post.name" class="w-8 h-8 rounded-full" alt="Autor" onerror="this.src='https://avatar.iran.liara.run/public/48'"/>
+          <img [src]="post.userPhoto || '/assets/male-placeholder.png'" class="w-8 h-8 rounded-full" alt="Autor" onerror="this.src='/assets/male-placeholder.png'"/>
           <span class="text-xs text-gray-700">{{ post.name }}</span>
           <span class="text-xs text-gray-400 ml-auto">{{ post.createdAt | date:'dd MMM, yyyy' }}</span>
         </div>
@@ -88,7 +135,3 @@
     <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
   </svg>
 </a>
-
-<footer class="w-full text-center text-gray-400 text-xs py-6 border-t mt-16">
-  © 2025 Blog Maker. Todos os direitos reservados.
-</footer>

@@ -7,17 +7,20 @@ import { AuthService } from '../../../../core/services/auth.service';
 import { LoadingComponent } from '../../../../shared/components/loading/loading.component';
 import { EmptyStateComponent } from '../../../../shared/components/empty-state/empty-state.component';
 import { ToastService } from '../../../../core/services/toast.service';
+import { ConfirmDialogComponent } from '../../../../shared/components/confirm-dialog/confirm-dialog.component';
 
 @Component({
   selector: 'app-my-posts',
   standalone: true,
-  imports: [CommonModule, RouterModule, LoadingComponent, EmptyStateComponent],
+  imports: [CommonModule, RouterModule, LoadingComponent, EmptyStateComponent, ConfirmDialogComponent],
   templateUrl: './my-posts.component.html',
   styleUrls: ['./my-posts.component.css']
 })
 export class MyPostsComponent implements OnInit {
   myPosts: PostResponse[] = [];
   loading = false;
+  showDeleteDialog = false;
+  postToDelete: PostResponse | null = null;
 
   private postService = inject(PostService);
   private authService = inject(AuthService);
@@ -52,19 +55,32 @@ export class MyPostsComponent implements OnInit {
     });
   }
 
-  deletePost(post: PostResponse) {
-    if (confirm(`Tem certeza que deseja excluir o post "${post.title}"?`)) {
-      this.postService.delete(post.id).subscribe({
-        next: () => {
-          this.toastService.success('Post excluído com sucesso');
-          // Atualizar a lista de posts
-          this.myPosts = this.myPosts.filter(p => p.id !== post.id);
-        },
-        error: (erro) => {
-          console.error('Erro ao excluir post:', erro);
-          this.toastService.error('Erro ao excluir o post');
-        }
-      });
-    }
+  confirmDeletePost(post: PostResponse) {
+    this.postToDelete = post;
+    this.showDeleteDialog = true;
+  }
+
+  onDeleteConfirmed() {
+    if (!this.postToDelete) return;
+
+    this.postService.delete(this.postToDelete.id).subscribe({
+      next: () => {
+        this.toastService.success('Post excluído com sucesso');
+        // Atualizar a lista de posts
+        this.myPosts = this.myPosts.filter(p => p.id !== this.postToDelete!.id);
+        this.postToDelete = null;
+        this.showDeleteDialog = false;
+      },
+      error: (erro) => {
+        console.error('Erro ao excluir post:', erro);
+        this.toastService.error('Erro ao excluir o post');
+        this.showDeleteDialog = false;
+      }
+    });
+  }
+
+  onDeleteCancelled() {
+    this.postToDelete = null;
+    this.showDeleteDialog = false;
   }
 }

@@ -1,77 +1,125 @@
-<div class="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-  <div class="max-w-md w-full space-y-8 bg-white p-8 rounded-lg shadow-md">
-    <div class="text-center">
-      <img class="mx-auto h-16 w-auto" src="/assets/logo-blog-maker.png" alt="Blog Maker">
-      <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900">
-        Login
-      </h2>
-      <p class="mt-2 text-center text-sm text-gray-600">
-        Acesse sua conta para gerenciar seus posts
-      </p>
+<div class="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-blue-100 p-4">
+  <div class="w-full max-w-5xl bg-white rounded-2xl shadow-xl overflow-hidden flex">
+    <div class="w-full lg:w-1/2 p-8 lg:p-12">
+      <div class="text-left">
+        <h2 class="text-3xl font-semibold text-gray-800 mb-1">Bem-vindo de volta!</h2>
+        <p class="text-gray-600 mb-10">Acesse sua conta para gerenciar seus posts.</p>
+      </div>
+
+      <div class="relative min-h-[300px]">
+        <div *ngIf="loading" class="absolute inset-0 flex items-center justify-center z-10 bg-white bg-opacity-70 rounded-lg">
+          <div class="animate-spin rounded-full border-t-4 border-indigo-600 h-12 w-12 border-opacity-75"></div>
+        </div>
+
+        <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="space-y-6" [class.opacity-50]="loading">
+          <div>
+            <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+            <div class="relative">
+              <input
+                id="email"
+                formControlName="email"
+                type="email"
+                autocomplete="email"
+                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
+                placeholder="email@exemplo.com"
+                [disabled]="loading"
+              >
+              <p *ngIf="loginForm.get('email')?.touched && loginForm.get('email')?.invalid"
+                class="mt-1 text-xs text-red-600">
+                {{ getFieldError('email') }}
+              </p>
+            </div>
+          </div>
+
+          <div>
+            <label for="password" class="block text-sm font-medium text-gray-700 mb-1">Senha</label>
+            <div class="relative">
+              <input
+                id="password"
+                formControlName="password"
+                [type]="passwordVisible ? 'text' : 'password'"
+                autocomplete="current-password"
+                class="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all pr-10"
+                [ngClass]="{
+                  'border-gray-300 focus:border-blue-500': !passwordError,
+                  'border-red-500 focus:border-red-500 focus:ring-red-500 bg-red-50': passwordError
+                }"
+                placeholder="******"
+                [disabled]="loading"
+              >
+              <button
+                type="button"
+                class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700 focus:outline-none"
+                (click)="togglePasswordVisibility()"
+                tabindex="-1"
+                [disabled]="loading"
+              >
+                <svg *ngIf="!passwordVisible" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                  <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
+                  <path fill-rule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clip-rule="evenodd" />
+                </svg>
+                <svg *ngIf="passwordVisible" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                  <path fill-rule="evenodd" d="M3.707 2.293a1 1 0 00-1.414 1.414l14 14a1 1 0 001.414-1.414l-1.473-1.473A10.014 10.014 0 0019.542 10C18.268 5.943 14.478 3 10 3a9.958 9.958 0 00-4.512 1.074l-1.78-1.781zm4.261 4.26l1.514 1.515a2.003 2.003 0 012.45 2.45l1.514 1.514a4 4 0 00-5.478-5.478z" clip-rule="evenodd" />
+                  <path d="M12.454 16.697L9.75 13.992a4 4 0 01-3.742-3.741L2.335 6.578A9.98 9.98 0 00.458 10c1.274 4.057 5.065 7 9.542 7 .847 0 1.669-.105 2.454-.303z" />
+                </svg>
+              </button>
+              <p *ngIf="loginForm.get('password')?.touched && loginForm.get('password')?.errors"
+                class="mt-1 text-xs text-red-600">
+                {{ getFieldError('password') }}
+              </p>
+            </div>
+          </div>
+
+          <div class="text-right">
+            <a href="#" class="text-sm text-blue-600 hover:text-blue-500">
+              Esqueceu sua senha?
+            </a>
+          </div>
+
+          <div>
+            <button
+              type="submit"
+              [disabled]="loginForm.invalid || loading"
+              class="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            >
+              Entrar
+            </button>
+          </div>
+
+          <div class="text-center text-sm mt-4">
+            <p class="text-gray-600">
+              Não tem uma conta?
+              <a routerLink="/register" class="font-medium text-blue-600 hover:text-blue-500">
+                Registre-se
+              </a>
+            </p>
+          </div>
+        </form>
+      </div>
+
+      <div class="mt-8 pt-6 border-t border-gray-200 text-center">
+        <p class="text-sm text-gray-500">Desenvolvido por João Paulo</p>
+        <div class="flex justify-center space-x-4 mt-2">
+          <a href="https://github.com/J0aoPaulo" target="_blank" rel="noopener noreferrer" class="text-gray-500 hover:text-blue-600">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-github" viewBox="0 0 16 16">
+              <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z"/>
+            </svg>
+          </a>
+          <a href="https://www.linkedin.com/in/joaopauloback/" target="_blank" rel="noopener noreferrer" class="text-gray-500 hover:text-blue-600">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-linkedin" viewBox="0 0 16 16">
+              <path d="M0 1.146C0 .513.526 0 1.175 0h13.65C15.474 0 16 .513 16 1.146v13.708c0 .633-.526 1.146-1.175 1.146H1.175C.526 16 0 15.487 0 14.854V1.146zm4.943 12.248V6.169H2.542v7.225h2.401zm-1.2-8.212c.837 0 1.358-.554 1.358-1.248-.015-.709-.52-1.248-1.342-1.248-.822 0-1.359.54-1.359 1.248 0 .694.521 1.248 1.327 1.248h.016zm4.908 8.212V9.359c0-.216.016-.432.08-.586.173-.431.568-.878 1.232-.878.869 0 1.216.662 1.216 1.634v3.865h2.401V9.25c0-2.22-1.184-3.252-2.764-3.252-1.274 0-1.845.7-2.165 1.193v.025h-.016a5.54 5.54 0 0 1 .016-.025V6.169h-2.4c.03.678 0 7.225 0 7.225h2.4z"/>
+            </svg>
+          </a>
+        </div>
+      </div>
     </div>
 
-    <app-loading *ngIf="loading"></app-loading>
-
-    <form *ngIf="!loading" [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="mt-8 space-y-6">
-      <div class="rounded-md space-y-4">
-        <div>
-          <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
-          <div class="mt-1">
-            <input
-              id="email"
-              formControlName="email"
-              type="email"
-              autocomplete="email"
-              class="appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-              placeholder="email@exemplo.com"
-            >
-            <p *ngIf="loginForm.get('email')?.touched && loginForm.get('email')?.invalid"
-               class="mt-1 text-xs text-red-600">
-              {{ getFieldError('email') }}
-            </p>
-          </div>
-        </div>
-
-        <div>
-          <label for="password" class="block text-sm font-medium text-gray-700">Senha</label>
-          <div class="mt-1">
-            <input
-              id="password"
-              formControlName="password"
-              type="password"
-              autocomplete="current-password"
-              class="appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500
-               text-gray-900 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-              placeholder="******"
-            >
-            <p *ngIf="loginForm.get('password')?.touched && loginForm.get('password')?.invalid"
-               class="mt-1 text-xs text-red-600">
-              {{ getFieldError('password') }}
-            </p>
-          </div>
-        </div>
-      </div>
-
-      <div>
-        <button
-          type="submit"
-          [disabled]="loginForm.invalid"
-          class="group relative w-full flex justify-center py-2 px-4 border border-transparent
-          text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none
-          focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed"
-        >
-          Entrar
-        </button>
-      </div>
-
-      <div class="text-center text-sm">
-        <p>
-          Não tem uma conta?
-          <a routerLink="/register" class="font-medium text-indigo-600 hover:text-indigo-500">
-            Registre-se
-          </a>
-        </p>
-      </div>
-    </form>
+    <div class="hidden lg:block lg:w-1/2 bg-blue-100 relative overflow-hidden px-73">
+  <img
+    src="/assets/acelera-maker.png"
+    alt="Blog Maker"
+    class="absolute inset-0 h-full w-full object-cover object-left"
+  >
+</div>
   </div>
 </div>

@@ -1,6 +1,21 @@
 @import "tailwindcss";
 
+.router-container {
+  position: relative;
+}
+
+.router-container > * {
+  transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+}
+
 .avatar-placeholder {
   @apply w-6 h-6 rounded-full flex items-center justify-center
          bg-indigo-100 text-indigo-600 text-[10px] font-semibold uppercase;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.25);
 }

@@ -5,24 +5,24 @@ import { PostService } from '../../../../core/services/post.service';
 import { PostResponse } from '../../../../core/models/response/post-reponse.model';
 import { AuthService } from '../../../../core/services/auth.service';
 import { ToastService } from '../../../../core/services/toast.service';
+import { ConfirmDialogComponent } from '../../../../shared/components/confirm-dialog/confirm-dialog.component';
 
 @Component({
   selector: 'app-post-detail',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, ConfirmDialogComponent],
   templateUrl: './post-detail.component.html'
 })
 export class PostDetailComponent implements OnInit {
   post?: PostResponse;
   isAuthor = false;
+  showDeleteDialog = false;
 
   private route = inject(ActivatedRoute);
   private svc = inject(PostService);
   private router = inject(Router);
   private authService = inject(AuthService);
   private toastService = inject(ToastService);
-
-  placeholderUrl = 'https://via.placeholder.com/48?text=?';
 
   ngOnInit() {
     const id = Number(this.route.snapshot.paramMap.get('id'));
@@ -54,10 +54,6 @@ export class PostDetailComponent implements OnInit {
     }
   }
 
-  onImgError(event: Event) {
-    (event.target as HTMLImageElement).src = this.placeholderUrl;
-  }
-
   editPost() {
     if (!this.post) return;
 
@@ -69,7 +65,7 @@ export class PostDetailComponent implements OnInit {
     this.router.navigate(['/posts', this.post.id, 'edit']);
   }
 
-  deletePost() {
+  confirmDeletePost() {
     if (!this.post) return;
 
     if (!this.isAuthor) {
@@ -77,17 +73,25 @@ export class PostDetailComponent implements OnInit {
       return;
     }
 
-    if (confirm('Tem certeza que deseja excluir este post?')) {
-      this.svc.delete(this.post.id).subscribe({
-        next: () => {
-          this.toastService.success('Post excluído com sucesso');
-          this.router.navigate(['/']);
-        },
-        error: (err) => {
-          console.error('Erro ao excluir post:', err);
-          this.toastService.error('Não foi possível excluir o post. Tente novamente mais tarde.');
-        }
-      });
-    }
+    this.showDeleteDialog = true;
+  }
+
+  onDeleteConfirmed() {
+    if (!this.post) return;
+
+    this.svc.delete(this.post.id).subscribe({
+      next: () => {
+        this.toastService.success('Post excluído com sucesso');
+        this.router.navigate(['/']);
+      },
+      error: (err) => {
+        console.error('Erro ao excluir post:', err);
+        this.toastService.error('Não foi possível excluir o post. Tente novamente mais tarde.');
+      }
+    });
+  }
+
+  onDeleteCancelled() {
+    this.showDeleteDialog = false;
   }
 }
