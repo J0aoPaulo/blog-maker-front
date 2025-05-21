@@ -1,7 +1,6 @@
 # Blog Maker Frontend
-
 <p align="center">
-  <img src="src/assets/logo-blog-maker.png" alt="Blog Maker Logo" width="250"/>
+  <img src="https://github.com/user-attachments/assets/fc3431fc-08bc-4338-9c77-754580b8119b" width="250"/>
 </p>
 
 <p align="center">
@@ -45,11 +44,12 @@ Desenvolvida como parte do programa Acelera Java, esta plataforma demonstra a im
 - **HttpClient**: Módulo para comunicação com APIs RESTful
 - **ESLint/Prettier**: Ferramentas para garantir qualidade e consistência do código
 
-## Algumas telas do projeto (Analytics, Meus Posts e Home)
+## Algumas telas do projeto (Analytics, Posts, Login e Home)
 <div align="center">
-    <img src="https://github.com/user-attachments/assets/9bd271f6-0236-4641-83d0-71ba61d6c99d" alt="Analytics" width="30%">
-    <img src="https://github.com/user-attachments/assets/4abff606-0f45-414a-9f48-8878a9cebed3" alt="Meus Posts" width="30%">
-    <img src="https://github.com/user-attachments/assets/dc3dc3d9-4f74-46de-afd3-0901af6db3b2" alt="Home" width="30%">
+    <img src="https://github.com/user-attachments/assets/7b2ee1da-e897-4efe-b893-c3389f7e2b38" alt="Analytics" width="30%">
+    <img src="https://github.com/user-attachments/assets/e03b2d35-db0b-46e3-b132-666c5baa390a" alt="Analytics" width="30%">
+    <img src="https://github.com/user-attachments/assets/171c69b6-8cd6-45b9-96c1-4bd762e84271" alt="Meus Posts" width="30%">
+    <img src="https://github.com/user-attachments/assets/33a61c59-5505-46d1-b896-c006801af83b" alt="Home" width="30%">
 </div>
 
 ## 📁 Estrutura do Projeto
