@@ -11,10 +11,10 @@
         <div class="flex items-center gap-2 mt-3">
           <div class="w-8 h-8 rounded-full overflow-hidden bg-gray-200">
             <img
-              [src]="post.userPhoto || '/assets/male-placeholder.png'"
+              [src]="post.userPhoto || getPlaceholderImage()"
               class="w-full h-full object-cover"
               alt="Autor"
-              onerror="this.src='/assets/male-placeholder.png'"
+              (error)="handleImageError($event)"
             />
           </div>
           <span class="text-xs text-gray-700">{{ post.name }}</span>
@@ -36,7 +36,7 @@
         <h3 class="text-lg font-semibold">{{ post.title }}</h3>
         <p class="text-gray-600 text-sm line-clamp-3 flex-grow">{{ post.content | slice:0:120 }}{{ post.content.length > 120 ? '…' : '' }}</p>
         <div class="flex items-center gap-2 mt-3">
-          <img [src]="post.userPhoto || '/assets/male-placeholder.png'" class="w-8 h-8 rounded-full" alt="Autor" onerror="this.src='/assets/male-placeholder.png'"/>
+          <img [src]="post.userPhoto || getPlaceholderImage()" class="w-8 h-8 rounded-full" alt="Autor" (error)="handleImageError($event)"/>
           <span class="text-xs text-gray-700">{{ post.name }}</span>
           <span class="text-xs text-gray-400 ml-auto">{{ post.createdAt | date:'dd MMM, yyyy' }}</span>
         </div>
@@ -56,7 +56,7 @@
         <h3 class="text-lg font-semibold">{{ post.title }}</h3>
         <p class="text-gray-600 text-sm line-clamp-3 flex-grow">{{ post.content | slice:0:120 }}{{ post.content.length > 120 ? '…' : '' }}</p>
         <div class="flex items-center gap-2 mt-3">
-          <img [src]="post.userPhoto || '/assets/male-placeholder.png'" class="w-8 h-8 rounded-full" alt="Autor" onerror="this.src='/assets/male-placeholder.png'"/>
+          <img [src]="post.userPhoto || getPlaceholderImage()" class="w-8 h-8 rounded-full" alt="Autor" (error)="handleImageError($event)"/>
           <span class="text-xs text-gray-700">{{ post.name }}</span>
           <span class="text-xs text-gray-400 ml-auto">{{ post.createdAt | date:'dd MMM, yyyy' }}</span>
         </div>
@@ -76,7 +76,7 @@
         <h3 class="text-lg font-semibold">{{ post.title }}</h3>
         <p class="text-gray-600 text-sm line-clamp-3 flex-grow">{{ post.content | slice:0:120 }}{{ post.content.length > 120 ? '…' : '' }}</p>
         <div class="flex items-center gap-2 mt-3">
-          <img [src]="post.userPhoto || '/assets/male-placeholder.png'" class="w-8 h-8 rounded-full" alt="Autor" onerror="this.src='/assets/male-placeholder.png'"/>
+          <img [src]="post.userPhoto || getPlaceholderImage()" class="w-8 h-8 rounded-full" alt="Autor" (error)="handleImageError($event)"/>
           <span class="text-xs text-gray-700">{{ post.name }}</span>
           <span class="text-xs text-gray-400 ml-auto">{{ post.createdAt | date:'dd MMM, yyyy' }}</span>
         </div>
@@ -96,7 +96,7 @@
         <h3 class="text-lg font-semibold">{{ post.title }}</h3>
         <p class="text-gray-600 text-sm line-clamp-3 flex-grow">{{ post.content | slice:0:120 }}{{ post.content.length > 120 ? '…' : '' }}</p>
         <div class="flex items-center gap-2 mt-3">
-          <img [src]="post.userPhoto || '/assets/male-placeholder.png'" class="w-8 h-8 rounded-full" alt="Autor" onerror="this.src='/assets/male-placeholder.png'"/>
+          <img [src]="post.userPhoto || getPlaceholderImage()" class="w-8 h-8 rounded-full" alt="Autor" (error)="handleImageError($event)"/>
           <span class="text-xs text-gray-700">{{ post.name }}</span>
           <span class="text-xs text-gray-400 ml-auto">{{ post.createdAt | date:'dd MMM, yyyy' }}</span>
         </div>
@@ -116,7 +116,7 @@
         <h3 class="text-lg font-semibold">{{ post.title }}</h3>
         <p class="text-gray-600 text-sm line-clamp-3 flex-grow">{{ post.content | slice:0:120 }}{{ post.content.length > 120 ? '…' : '' }}</p>
         <div class="flex items-center gap-2 mt-3">
-          <img [src]="post.userPhoto || '/assets/male-placeholder.png'" class="w-8 h-8 rounded-full" alt="Autor" onerror="this.src='/assets/male-placeholder.png'"/>
+          <img [src]="post.userPhoto || getPlaceholderImage()" class="w-8 h-8 rounded-full" alt="Autor" (error)="handleImageError($event)"/>
           <span class="text-xs text-gray-700">{{ post.name }}</span>
           <span class="text-xs text-gray-400 ml-auto">{{ post.createdAt | date:'dd MMM, yyyy' }}</span>
         </div>
@@ -125,13 +125,3 @@
     </div>
   </section>
 </main>
-
-<a
-  [routerLink]="['/posts/new']"
-  class="fixed bottom-8 right-8 bg-indigo-600 hover:bg-indigo-700 text-white rounded-full w-16 h-16 flex items-center justify-center shadow-lg transition-colors z-50"
-  title="Criar novo post"
->
-  <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" viewBox="0 0 20 20" fill="currentColor">
-    <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
-  </svg>
-</a>

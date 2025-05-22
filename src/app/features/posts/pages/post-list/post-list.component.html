@@ -26,10 +26,8 @@
     Voltar para página inicial
   </a>
 
-  <!-- Filter and Sort section -->
   <div class="bg-white rounded-lg shadow-sm p-4 mb-8">
     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-      <!-- Search Field -->
       <div>
         <label for="search" class="block text-sm font-medium text-gray-700 mb-1">Buscar</label>
         <div class="relative">
@@ -48,7 +46,6 @@
         </div>
       </div>
 
-      <!-- Category Filter -->
       <div>
         <label for="theme-filter" class="block text-sm font-medium text-gray-700 mb-1">Filtrar por categoria</label>
         <select
@@ -62,7 +59,6 @@
         </select>
       </div>
 
-      <!-- Sort Options -->
       <div>
         <label for="sort-options" class="block text-sm font-medium text-gray-700 mb-1">Ordenar por</label>
         <select
@@ -76,7 +72,6 @@
       </div>
     </div>
 
-    <!-- Clear filters -->
     <div class="mt-4 flex justify-end">
       <button
         (click)="clearFilters()"
@@ -90,12 +85,10 @@
     </div>
   </div>
 
-  <!-- Loading indicator -->
   <div *ngIf="isLoading" class="flex justify-center py-12">
     <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600"></div>
   </div>
 
-  <!-- Posts Grid -->
   <div *ngIf="!isLoading" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
     <app-post-card
       *ngFor="let post of filteredPosts$ | async"
@@ -104,7 +97,6 @@
     ></app-post-card>
   </div>
 
-  <!-- Empty state -->
   <div *ngIf="!isLoading && (filteredPosts$ | async)?.length === 0" class="text-center py-12">
     <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 mx-auto text-gray-300 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />

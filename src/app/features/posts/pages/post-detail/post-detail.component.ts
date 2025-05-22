@@ -1,5 +1,5 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { ActivatedRoute, Router, RouterLink, RouterModule } from '@angular/router';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { PostService } from '../../../../core/services/post.service';
 import { PostResponse } from '../../../../core/models/response/post-reponse.model';
@@ -18,11 +18,11 @@ export class PostDetailComponent implements OnInit {
   isAuthor = false;
   showDeleteDialog = false;
 
-  private route = inject(ActivatedRoute);
-  private svc = inject(PostService);
-  private router = inject(Router);
-  private authService = inject(AuthService);
-  private toastService = inject(ToastService);
+  private readonly route = inject(ActivatedRoute);
+  private readonly svc = inject(PostService);
+  private readonly router = inject(Router);
+  private readonly authService = inject(AuthService);
+  private readonly toastService = inject(ToastService);
 
   ngOnInit() {
     const id = Number(this.route.snapshot.paramMap.get('id'));
@@ -52,6 +52,15 @@ export class PostDetailComponent implements OnInit {
     } else {
       this.isAuthor = false;
     }
+  }
+
+  handleImageError(event: Event): void {
+    const target = event.target as HTMLImageElement;
+    target.src = this.getPlaceholderImage();
+  }
+
+  getPlaceholderImage(): string {
+    return 'assets/male-placeholder.png';
   }
 
   editPost() {

@@ -34,14 +34,17 @@ Desenvolvida como parte do programa Acelera Java, esta plataforma demonstra a im
   <img src="https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white" alt="TypeScript" />
   <img src="https://img.shields.io/badge/TailwindCSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white" alt="TailwindCSS" />
   <img src="https://img.shields.io/badge/RxJS-B7178C?style=for-the-badge&logo=reactivex&logoColor=white" alt="RxJS" />
+  <img src="https://img.shields.io/badge/Angular_Material-757575?style=for-the-badge&logo=angular&logoColor=white" alt="Angular Material" />
 </p>
 
-- **Angular**: Framework principal para desenvolvimento de SPA
+- **Angular 19**: Framework principal para desenvolvimento de SPA
 - **TypeScript**: Linguagem de programação tipada para desenvolvimento seguro
-- **TailwindCSS**: Framework CSS utility-first para estilização responsiva e moderna
+- **TailwindCSS v4**: Framework CSS utility-first para estilização responsiva e moderna
 - **RxJS**: Biblioteca para programação reativa e manipulação de eventos assíncronos
+- **Angular Material**: Biblioteca de componentes UI baseada no Material Design
 - **Angular Router**: Sistema de navegação entre páginas com lazy-loading
 - **HttpClient**: Módulo para comunicação com APIs RESTful
+- **Chart.js**: Biblioteca para criação de gráficos interativos
 - **ESLint/Prettier**: Ferramentas para garantir qualidade e consistência do código
 
 ## Algumas telas do projeto (Analytics, Posts, Login e Home)
@@ -93,14 +96,14 @@ src/app/
 
 ### 📊 Analytics
 - **Dashboard**: Visualização de estatísticas sobre posts
-- **Métricas de engajamento**: Gráficos e dados de interação
+- **Métricas de engajamento**: Gráficos e dados de interação com Chart.js
 - **Relatórios**: Exportação de dados para análise
 
 ### 🎨 Interface de Usuário
 - **Design responsivo**: Adaptação perfeita para desktop e mobile
 - **Navegação intuitiva**: UX focada na experiência do usuário
 - **Feedback visual**: Sistema de notificações e toasts
-- **Componentes consistentes**: Design system próprio e reutilizável
+- **Componentes consistentes**: Utilização do Angular Material e design system próprio
 
 ## 🔧 Instalação e Configuração
 
@@ -137,9 +140,9 @@ export const environment = {
 
 4. **Inicie o servidor de desenvolvimento**:
 ```bash
-npm run start
+npm run watch
 # ou com yarn
-yarn start
+yarn watch
 ```
 
 5. **Acesse a aplicação** em `http://localhost:4200`
@@ -175,17 +178,19 @@ Todas as requisições HTTP são interceptadas pelo `auth.interceptor.ts` que ad
 
 ## 🚀 Deploy
 
-O Blog Maker Frontend está hospedado no [Netlify](https://www.netlify.com/), uma plataforma moderna para hospedagem e automação de aplicações web estáticas, enquanto o backend está hospedado no [Railway](https://railway.app/).
+O Blog Maker Frontend está hospedado no [Vercel](https://vercel.com/), uma plataforma moderna para hospedagem e automação de aplicações web, enquanto o backend está hospedado no [Railway](https://railway.app/).
 
-### Frontend no Netlify
+### Frontend no Vercel
 
-O Netlify oferece uma série de benefícios para nossa aplicação Angular:
+O Vercel oferece uma série de benefícios para nossa aplicação Angular:
 
 - **Deploy Contínuo**: Integração automática com GitHub para CI/CD
 - **SSL Gratuito**: Certificados HTTPS automáticos
-- **CDN Global**: Distribuição de conteúdo otimizada
+- **Edge Network Global**: Distribuição de conteúdo otimizada globalmente
 - **Previews por Pull Request**: Ambiente de teste para cada PR
-- **Build Automation**: Configuração automática do processo de build
+- **Zero Configuration**: Detecção automática de frameworks Angular
+- **Analytics Integrado**: Métricas de performance e uso em tempo real
+- **Logs Detalhados**: Registro completo de operações para troubleshooting
 
 ### Backend no Railway
 
@@ -199,7 +204,7 @@ O backend Spring Boot está hospedado no Railway, oferecendo:
 ### Como acessar
 
 A aplicação está disponível em:
-- Frontend: [https://acelera-blog-maker.netlify.app/](https://acelera-blog-maker.netlify.app/)
+- Frontend: [https://acelera-blog-maker.vercel.app/](https://acelera-blog-maker.vercel.app/)
 - Backend: [https://blog-maker-production.up.railway.app/](https://blog-maker-production.up.railway.app/)
 
 ### Configuração de Ambiente
@@ -265,10 +270,6 @@ Contribuições são bem-vindas! Por favor, siga estas etapas:
 5. Abra um Pull Request
 
 ---
-
-<p align="center">
-  <img src="src/assets/logo-blog-maker.png" alt="Blog Maker Logo" width="120"/>
-</p>
 
 <p align="center">
   © 2025 Blog Maker. Desenvolvido como parte do programa Acelera Maker.

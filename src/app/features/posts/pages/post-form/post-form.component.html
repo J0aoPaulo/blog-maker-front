@@ -13,9 +13,10 @@
 
     <form [formGroup]="form" (ngSubmit)="save()" class="space-y-6">
       <div class="space-y-2">
-        <label class="block text-sm font-medium text-gray-700">Título</label>
+        <label for="post-title" class="block text-sm font-medium text-gray-700">Título</label>
         <div class="relative">
           <input
+            id="post-title"
             formControlName="title"
             type="text"
             class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
@@ -27,9 +28,10 @@
       </div>
 
       <div class="space-y-2">
-        <label class="block text-sm font-medium text-gray-700">Conteúdo</label>
+        <label for="post-content" class="block text-sm font-medium text-gray-700">Conteúdo</label>
         <div class="relative">
           <textarea
+            id="post-content"
             formControlName="content"
             rows="10"
             class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all resize-none"
@@ -41,7 +43,7 @@
       </div>
 
       <div class="space-y-2">
-        <label class="block text-sm font-medium text-gray-700">Tema</label>
+        <label for="post-theme" class="block text-sm font-medium text-gray-700">Tema</label>
         <div *ngIf="isLoadingThemes" class="flex items-center text-sm text-gray-500 mt-1">
           <svg class="animate-spin h-4 w-4 mr-2 text-blue-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
             <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
@@ -56,6 +58,7 @@
           Erro ao carregar temas. Por favor, tente novamente.
         </div>
         <select
+          id="post-theme"
           *ngIf="!isLoadingThemes && !errorLoadingThemes"
           formControlName="themeId"
           class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all bg-white appearance-none select-with-arrow"

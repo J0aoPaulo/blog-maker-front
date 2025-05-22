@@ -1,6 +1,6 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, OnDestroy, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { BehaviorSubject, combineLatest, map } from 'rxjs';
+import { BehaviorSubject, Subscription } from 'rxjs';
 import { PostService } from '../../../../core/services/post.service';
 import { ThemeService } from '../../../../core/services/theme.service';
 import { PostResponse } from '../../../../core/models/response/post-reponse.model';
@@ -16,24 +16,22 @@ import { FormsModule } from '@angular/forms';
   templateUrl: './post-list.component.html',
   styleUrls: ['./post-list.component.css']
 })
-export class PostListComponent implements OnInit {
-  private postService = inject(PostService);
-  private themeService = inject(ThemeService);
+export class PostListComponent implements OnInit, OnDestroy {
+  private readonly postService = inject(PostService);
+  private readonly themeService = inject(ThemeService);
+  private readonly subscriptions = new Subscription();
 
-  // Posts and filtering
   allPosts: PostResponse[] = [];
   filteredPosts$ = new BehaviorSubject<PostResponse[]>([]);
   themes: Theme[] = [];
   isLoading = true;
 
-  // Filter options
-  sortOptions = [
+  readonly sortOptions = [
     { value: 'newest', label: 'Mais recentes primeiro' },
     { value: 'oldest', label: 'Mais antigos primeiro' },
     { value: 'title', label: 'Título (A-Z)' },
   ];
 
-  // Selected filters
   selectedThemeId: number | null = null;
   selectedSort = 'newest';
   searchTerm = '';
@@ -43,9 +41,13 @@ export class PostListComponent implements OnInit {
     this.loadThemes();
   }
 
+  ngOnDestroy(): void {
+    this.subscriptions.unsubscribe();
+  }
+
   loadPosts(): void {
     this.isLoading = true;
-    this.postService.getAll().subscribe({
+    const sub = this.postService.getAll().subscribe({
       next: (posts) => {
         this.allPosts = posts;
         this.applyFilters();
@@ -56,10 +58,12 @@ export class PostListComponent implements OnInit {
         this.isLoading = false;
       }
     });
+
+    this.subscriptions.add(sub);
   }
 
   loadThemes(): void {
-    this.themeService.getAll().subscribe({
+    const sub = this.themeService.getAll().subscribe({
       next: (themes) => {
         this.themes = themes;
       },
@@ -67,17 +71,17 @@ export class PostListComponent implements OnInit {
         console.error('Error loading themes:', err);
       }
     });
+
+    this.subscriptions.add(sub);
   }
 
   applyFilters(): void {
     let filtered = [...this.allPosts];
 
-    // Filter by theme if selected
     if (this.selectedThemeId !== null) {
       filtered = filtered.filter(post => post.themeId === this.selectedThemeId);
     }
 
-    // Filter by search term
     if (this.searchTerm.trim() !== '') {
       const term = this.searchTerm.toLowerCase().trim();
       filtered = filtered.filter(post =>
@@ -86,16 +90,15 @@ export class PostListComponent implements OnInit {
       );
     }
 
-    // Apply sorting
     switch (this.selectedSort) {
       case 'newest':
-        filtered.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+        filtered = [...filtered].sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
         break;
       case 'oldest':
-        filtered.sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime());
+        filtered = [...filtered].sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime());
         break;
       case 'title':
-        filtered.sort((a, b) => a.title.localeCompare(b.title));
+        filtered = [...filtered].sort((a, b) => a.title.localeCompare(b.title));
         break;
     }
 

@@ -18,7 +18,7 @@ import { Subscription } from 'rxjs';
               [src]="'/assets/logo-blog-maker.png'"
               alt="Blog Maker Logo"
               class="h-14 w-auto"
-              onerror="this.onerror=null; this.src='/assets/logo-blog-maker.png'; if(!this.complete) {this.style.display='none';}"
+              (error)="handleImageError($event)"
             />
           </a>
         </div>
@@ -53,13 +53,13 @@ import { Subscription } from 'rxjs';
                   [src]="currentUser?.photo"
                   [alt]="currentUser?.name"
                   class="w-full h-full object-cover"
-                  onerror="this.onerror=null; this.style.display='none';"
+                  (error)="handleUserPhotoError($event)"
                 />
                 <svg *ngIf="!currentUser?.photo" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-500" viewBox="0 0 20 20" fill="currentColor">
                   <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd" />
                 </svg>
               </div>
-              <span class="text-sm font-medium text-gray-700 mx-3">{{ currentUser?.name || 'Usuário' }}</span>
+              <span class="text-sm font-medium text-gray-700 mx-3">{{ currentUser?.name ?? 'Usuário' }}</span>
               <button
                 (click)="logout()"
                 class="text-sm font-medium px-3 py-1 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-md transition"
@@ -84,8 +84,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
   private userSubscription: Subscription | null = null;
 
   constructor(
-    private authService: AuthService,
-    private cdr: ChangeDetectorRef
+    private readonly authService: AuthService,
+    private readonly cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
@@ -114,5 +114,18 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   logout(): void {
     this.authService.logout();
+  }
+
+  handleImageError(event: Event): void {
+    const target = event.target as HTMLImageElement;
+    target.src = '/assets/logo-blog-maker.png';
+    if (!target.complete) {
+      target.style.display = 'none';
+    }
+  }
+
+  handleUserPhotoError(event: Event): void {
+    const target = event.target as HTMLImageElement;
+    target.style.display = 'none';
   }
 }

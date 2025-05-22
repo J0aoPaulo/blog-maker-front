@@ -1,10 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { AuthService, UpdateUserRequest, UserResponse } from '../../../../core/services/auth.service';
+import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { AuthService } from '../../../../core/services/auth.service';
 import { ToastService } from '../../../../core/services/toast.service';
 import { LoadingComponent } from '../../../../shared/components/loading/loading.component';
 import { Router } from '@angular/router';
+import { UserResponse } from '../../../../core/models/response/user-response.model';
+import { UpdateUserRequest } from '../../../../core/models/response/update-user-request.model';
 
 @Component({
   selector: 'app-profile',
@@ -24,10 +26,10 @@ export class ProfileComponent implements OnInit {
   previewUrl: string | ArrayBuffer | null = null;
 
   constructor(
-    private authService: AuthService,
-    private fb: FormBuilder,
-    private toastService: ToastService,
-    private router: Router
+    private readonly authService: AuthService,
+    private readonly fb: FormBuilder,
+    private readonly toastService: ToastService,
+    private readonly router: Router
   ) {
     this.profileForm = this.fb.group({
       name: [{value: '', disabled: true}],
@@ -49,7 +51,7 @@ export class ProfileComponent implements OnInit {
     this.profileForm.patchValue({
       name: this.user.name,
       email: this.user.email,
-      photo: this.user.photo || ''
+      photo: this.user.photo ?? ''
     });
 
     this.loading = false;
@@ -83,7 +85,9 @@ export class ProfileComponent implements OnInit {
 
     const updateData: UpdateUserRequest = {
       name: this.user.name,
-      email: this.user.email
+      email: this.user.email,
+      password: '',
+      photo: ''
     };
 
     if (this.selectedFile || this.previewUrl) {
@@ -97,12 +101,21 @@ export class ProfileComponent implements OnInit {
         this.toastService.success('Foto de perfil atualizada com sucesso!');
       },
       error: (error) => {
-        this.toastService.error(error.message || 'Erro ao atualizar perfil');
+        this.toastService.error(error.message ?? 'Erro ao atualizar perfil');
       },
       complete: () => {
         this.updateLoading = false;
       }
     });
+  }
+
+  handleImageError(event: Event): void {
+    const target = event.target as HTMLImageElement;
+    target.src = this.getPlaceholderImagePath();
+  }
+
+  getPlaceholderImagePath(): string {
+    return 'assets/male-placeholder.png';
   }
 
   getFieldError(form: FormGroup, fieldName: string): string {

@@ -1,6 +1,6 @@
 import { Component, inject, Input, OnInit } from '@angular/core';
-import { CommonModule }     from '@angular/common';
-import { PostResponse }     from '../../../../core/models/response/post-reponse.model';
+import { CommonModule } from '@angular/common';
+import { PostResponse } from '../../../../core/models/response/post-reponse.model';
 import { PostService } from '../../../../core/services/post.service';
 import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../../../../core/services/auth.service';
@@ -19,10 +19,10 @@ export class PostCardComponent implements OnInit {
   isAuthor = false;
   showDeleteDialog = false;
 
-  private svc = inject(PostService)
-  private router = inject(Router)
-  private authService = inject(AuthService)
-  private toastService = inject(ToastService)
+  private readonly svc = inject(PostService)
+  private readonly router = inject(Router)
+  private readonly authService = inject(AuthService)
+  private readonly toastService = inject(ToastService)
 
   ngOnInit() {
     this.checkIfUserIsAuthor()
@@ -47,6 +47,15 @@ export class PostCardComponent implements OnInit {
     this.showDeleteDialog = true;
   }
 
+  handleImageError(event: Event): void {
+    const target = event.target as HTMLImageElement;
+    target.src = this.getPlaceholderImage();
+  }
+
+  getPlaceholderImage(): string {
+    return 'assets/male-placeholder.png';
+  }
+
   onDeleteConfirmed() {
     if (!this.isAuthor) {
       this.toastService.error('Você não tem permissão para excluir este post');
@@ -56,7 +65,6 @@ export class PostCardComponent implements OnInit {
     this.svc.delete(this.post.id).subscribe({
       next: () => {
         this.toastService.success('Post excluído com sucesso');
-        // recarrega rota atual
         this.router.navigateByUrl('/posts', { skipLocationChange: true })
           .then(() => this.router.navigate(['/posts']));
       },
