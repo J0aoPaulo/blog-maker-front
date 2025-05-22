@@ -90,8 +90,17 @@
       </div>
 
       <div class="h-80">
-        <div *ngIf="timeData.length === 0" class="flex items-center justify-center h-full text-gray-400">
-          Não há dados temporais disponíveis
+        <div *ngIf="timeData.length === 0" class="flex flex-col items-center justify-center h-full">
+          <p class="text-gray-400 mb-4">Não há dados temporais disponíveis para o período selecionado</p>
+          <button
+            (click)="generateSampleTimeData()"
+            class="bg-gray-200 hover:bg-gray-300 text-gray-700 py-2 px-4 rounded-md shadow-sm text-sm font-medium"
+          >
+            Gerar Dados de Exemplo
+          </button>
+          <p class="text-gray-400 text-xs mt-2">
+            Dica: Tente selecionar um período diferente ou alterar o agrupamento
+          </p>
         </div>
         <canvas *ngIf="timeData.length > 0" #timeChartCanvas height="300"></canvas>
       </div>

@@ -23,7 +23,7 @@ export const appConfig: ApplicationConfig = {
     ),
 
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
-    { provide: LOCALE_ID, useValue: 'pt-BR' }, // Define o locale padrão como pt-BR
+    { provide: LOCALE_ID, useValue: 'pt-BR' },
 
     provideAnimations(),
     importProvidersFrom(BrowserAnimationsModule, MatSnackBarModule)

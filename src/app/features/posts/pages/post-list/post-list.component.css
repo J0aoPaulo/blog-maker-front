@@ -1,9 +1,7 @@
-/* Filter styles */
 .filter-section {
   transition: all 0.3s ease;
 }
 
-/* Input styling */
 input, select {
   transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
 }
@@ -14,19 +12,16 @@ input:focus, select:focus {
   outline: none;
 }
 
-/* Responsive adjustments */
 @media (max-width: 768px) {
   .filter-section {
     margin-bottom: 1.5rem;
   }
 }
 
-/* Clear filters button hover effect */
 .clear-filters:hover {
   color: #4338ca;
 }
 
-/* Loading animation */
 @keyframes spin {
   to {
     transform: rotate(360deg);

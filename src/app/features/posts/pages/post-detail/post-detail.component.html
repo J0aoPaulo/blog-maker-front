@@ -1,4 +1,14 @@
 <div *ngIf="post" class="max-w-3xl mx-auto p-6 space-y-6">
+  <a
+    [routerLink]="['/']"
+    class="text-blue-600 hover:text-blue-800 text-sm font-medium flex items-center gap-1 mb-4"
+  >
+    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+    </svg>
+    Voltar para home
+  </a>
+
   <div class="bg-white rounded-xl shadow-sm p-8">
     <div class="flex items-center gap-4 mb-6">
       <div class="w-12 h-12 rounded-full overflow-hidden bg-gray-100">
@@ -34,16 +44,6 @@
   </div>
 
   <div class="flex justify-between items-center">
-    <a
-      [routerLink]="['/']"
-      class="text-blue-600 hover:text-blue-800 text-sm font-medium flex items-center gap-1"
-    >
-      <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-      </svg>
-      Voltar para home
-    </a>
-
     <div *ngIf="isAuthor" class="flex items-center gap-4">
       <button
         (click)="editPost()"

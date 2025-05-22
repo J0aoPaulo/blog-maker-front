@@ -21,20 +21,17 @@ export class PostListComponent implements OnInit, OnDestroy {
   private readonly themeService = inject(ThemeService);
   private readonly subscriptions = new Subscription();
 
-  // Posts and filtering
   allPosts: PostResponse[] = [];
   filteredPosts$ = new BehaviorSubject<PostResponse[]>([]);
   themes: Theme[] = [];
   isLoading = true;
 
-  // Filter options
   readonly sortOptions = [
     { value: 'newest', label: 'Mais recentes primeiro' },
     { value: 'oldest', label: 'Mais antigos primeiro' },
     { value: 'title', label: 'Título (A-Z)' },
   ];
 
-  // Selected filters
   selectedThemeId: number | null = null;
   selectedSort = 'newest';
   searchTerm = '';
@@ -81,12 +78,10 @@ export class PostListComponent implements OnInit, OnDestroy {
   applyFilters(): void {
     let filtered = [...this.allPosts];
 
-    // Filter by theme if selected
     if (this.selectedThemeId !== null) {
       filtered = filtered.filter(post => post.themeId === this.selectedThemeId);
     }
 
-    // Filter by search term
     if (this.searchTerm.trim() !== '') {
       const term = this.searchTerm.toLowerCase().trim();
       filtered = filtered.filter(post =>
@@ -95,7 +90,6 @@ export class PostListComponent implements OnInit, OnDestroy {
       );
     }
 
-    // Apply sorting
     switch (this.selectedSort) {
       case 'newest':
         filtered = [...filtered].sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());

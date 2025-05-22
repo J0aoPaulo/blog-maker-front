@@ -28,7 +28,7 @@ export class AnalyticsComponent implements OnInit, OnDestroy {
   themeChart: Chart | null = null;
   timeChart: Chart | null = null;
 
-  timeGranularity: 'day' | 'week' | 'month' = 'week';
+  timeGranularity: 'day' | 'week' | 'month' = 'day';
   startDate: string = this.getDefaultStartDate();
   endDate: string = this.getDefaultEndDate();
 
@@ -98,17 +98,31 @@ export class AnalyticsComponent implements OnInit, OnDestroy {
   }
 
   loadTimeSeriesData(): void {
+    console.log('Carregando dados temporais:', {
+      startDate: this.startDate,
+      endDate: this.endDate,
+      granularity: this.timeGranularity
+    });
+
+    this.timeData = [];
+
     const timeSubscription = this.analyticsService.getPostsOverTime(
       this.startDate,
       this.endDate,
       this.timeGranularity
     ).subscribe({
       next: (data) => {
+        console.log('Dados temporais recebidos:', data);
         this.timeData = data;
-        setTimeout(() => this.renderTimeChart(), 0);
+        if (data.length === 0) {
+          console.warn('Nenhum dado temporal recebido');
+        } else {
+          setTimeout(() => this.renderTimeChart(), 0);
+        }
       },
       error: (error) => {
-        this.handleError('Não foi possível carregar dados temporais', error);
+        console.error('Erro ao carregar dados temporais:', error);
+        this.handleTimeChartError('Não foi possível carregar dados temporais', error);
       }
     });
     this.subscriptions.add(timeSubscription);
@@ -116,6 +130,66 @@ export class AnalyticsComponent implements OnInit, OnDestroy {
 
   updateTimeChart(): void {
     this.loadTimeSeriesData();
+  }
+
+  generateSampleTimeData(): void {
+    this.timeData = [];
+
+    const start = new Date(this.startDate);
+    const end = new Date(this.endDate);
+
+    if (isNaN(start.getTime()) || isNaN(end.getTime())) {
+      console.error('Datas inválidas para gerar dados de exemplo');
+      return;
+    }
+
+    console.log('Gerando dados de exemplo para o período:', {
+      start: this.startDate,
+      end: this.endDate,
+      granularity: this.timeGranularity
+    });
+
+    const sampleData: TimeBucketDTO[] = [];
+    const currentDate = new Date(start);
+
+    while (currentDate <= end) {
+      const randomPosts = Math.floor(Math.random() * 5) + 1;
+
+      let bucket: string;
+
+      if (this.timeGranularity === 'day') {
+        bucket = currentDate.toISOString().split('T')[0];
+        currentDate.setDate(currentDate.getDate() + 1);
+      }
+      else if (this.timeGranularity === 'week') {
+        const year = currentDate.getFullYear();
+        const weekNumber = this.getWeekNumber(currentDate);
+        bucket = `${year}-${weekNumber < 10 ? '0' + weekNumber : weekNumber}-01`;
+        currentDate.setDate(currentDate.getDate() + 7);
+      }
+      else {
+        const year = currentDate.getFullYear();
+        const month = currentDate.getMonth() + 1;
+        bucket = `${year}-${month < 10 ? '0' + month : month}-01`;
+        currentDate.setMonth(currentDate.getMonth() + 1);
+      }
+
+      sampleData.push({
+        bucket,
+        totalPosts: randomPosts
+      });
+    }
+
+    console.log('Dados de exemplo gerados:', sampleData);
+
+    this.timeData = sampleData;
+    setTimeout(() => this.renderTimeChart(), 0);
+  }
+
+  private getWeekNumber(date: Date): number {
+    const firstDayOfYear = new Date(date.getFullYear(), 0, 1);
+    const pastDaysOfYear = (date.getTime() - firstDayOfYear.getTime()) / 86400000;
+    return Math.ceil((pastDaysOfYear + firstDayOfYear.getDay() + 1) / 7);
   }
 
   private renderAuthorChart(): void {
@@ -230,7 +304,13 @@ export class AnalyticsComponent implements OnInit, OnDestroy {
   }
 
   private renderTimeChart(): void {
-    if (!this.timeChartCanvas || this.timeData.length === 0) return;
+    if (!this.timeChartCanvas || this.timeData.length === 0) {
+      console.warn('Não é possível renderizar o gráfico temporal:', {
+        canvasExists: !!this.timeChartCanvas,
+        dataLength: this.timeData.length
+      });
+      return;
+    }
 
     const ctx = this.timeChartCanvas.nativeElement.getContext('2d');
     if (!ctx) return;
@@ -239,66 +319,96 @@ export class AnalyticsComponent implements OnInit, OnDestroy {
       this.timeChart.destroy();
     }
 
-    const labels = this.timeData.map(item => this.formatBucket(item.bucket));
-    const data = this.timeData.map(item => item.totalPosts);
+    console.log('Dados para o gráfico temporal:', this.timeData);
 
-    this.timeChart = new Chart(ctx, {
-      type: 'line',
-      data: {
-        labels: labels,
-        datasets: [{
-          label: 'Posts',
-          data: data,
-          backgroundColor: 'rgba(99, 102, 241, 0.1)',
-          borderColor: 'rgba(99, 102, 241, 1)',
-          borderWidth: 2,
-          fill: true,
-          tension: 0.3
-        }]
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: {
-          legend: {
-            display: false
-          },
-          title: {
-            display: true,
-            text: 'Distribuição de Posts ao Longo do Tempo',
-            font: {
-              size: 16
-            }
-          }
+    try {
+      const labels = this.timeData.map(item => this.formatBucket(item.bucket));
+      const data = this.timeData.map(item => item.totalPosts);
+
+      console.log('Labels formatados:', labels);
+      console.log('Dados formatados:', data);
+
+      this.timeChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: labels,
+          datasets: [{
+            label: 'Posts',
+            data: data,
+            backgroundColor: 'rgba(99, 102, 241, 0.1)',
+            borderColor: 'rgba(99, 102, 241, 1)',
+            borderWidth: 2,
+            fill: true,
+            tension: 0.3
+          }]
         },
-        scales: {
-          y: {
-            beginAtZero: true,
-            ticks: {
-              precision: 0
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              display: false
+            },
+            title: {
+              display: true,
+              text: 'Distribuição de Posts ao Longo do Tempo',
+              font: {
+                size: 16
+              }
+            }
+          },
+          scales: {
+            y: {
+              beginAtZero: true,
+              ticks: {
+                precision: 0
+              }
             }
           }
         }
-      }
-    });
+      });
+    } catch (error) {
+      console.error('Erro ao renderizar gráfico temporal:', error);
+    }
   }
 
   private formatBucket(bucket: string): string {
-    const parts = bucket.split('-');
+    if (!bucket) {
+      console.warn('Bucket inválido:', bucket);
+      return 'Desconhecido';
+    }
 
-    if (this.timeGranularity === 'day') {
-      return `${parts[2]}/${parts[1]}`;
-    } else if (this.timeGranularity === 'week') {
-      return `Sem ${parts[1]}`;
-    } else {
-      const monthNames = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'] as const;
-      return `${monthNames[parseInt(parts[1], 10) - 1]}/${parts[0]}`;
+    try {
+      const parts = bucket.split('-');
+
+      if (parts.length < 3) {
+        console.warn('Formato de bucket inválido:', bucket);
+        return bucket;
+      }
+
+      if (this.timeGranularity === 'day') {
+        return `${parts[2]}/${parts[1]}`;
+      } else if (this.timeGranularity === 'week') {
+        return `Sem ${parts[1]}`;
+      } else {
+        const monthNames = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'] as const;
+        const monthIndex = parseInt(parts[1], 10) - 1;
+        if (monthIndex >= 0 && monthIndex < 12) {
+          return `${monthNames[monthIndex]}/${parts[0]}`;
+        } else {
+          console.warn('Índice de mês inválido:', monthIndex, 'de bucket:', bucket);
+          return `${parts[1]}/${parts[0]}`;
+        }
+      }
+    } catch (error) {
+      console.error('Erro ao formatar bucket:', error);
+      return bucket;
     }
   }
 
   private getDefaultStartDate(): string {
     const date = new Date();
-    date.setMonth(date.getMonth() - 3);
+    date.setMonth(date.getMonth() - 6);
     return date.toISOString().split('T')[0];
   }
 
@@ -311,5 +421,10 @@ export class AnalyticsComponent implements OnInit, OnDestroy {
     this.errorMessage = message;
     this.loadingData = false;
     console.error(message, error);
+  }
+
+  private handleTimeChartError(message: string, error: any): void {
+    console.error(message, error);
+    this.timeData = [];
   }
 }

@@ -44,31 +44,37 @@ export class HomeComponent implements OnInit, OnDestroy {
   private carregarPostsPorTema() {
     const sub = this.postService.getAll().subscribe({
       next: (posts) => {
-        this.angularPosts = posts
-          .filter(p => p.theme?.toLowerCase().includes('angular'))
-          .slice(0, 3);
+        const sortByDate = (posts: PostResponse[]) => {
+          return [...posts].sort((a, b) =>
+            new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+          );
+        };
 
-        this.springPosts = posts
-          .filter(p => p.theme?.toLowerCase().includes('spring'))
-          .slice(0, 3);
+        this.angularPosts = sortByDate(
+          posts.filter(p => p.theme?.toLowerCase().includes('angular'))
+        ).slice(0, 3);
 
-        this.reactPosts = posts
-          .filter(p => p.theme?.toLowerCase().includes('react'))
-          .slice(0, 3);
+        this.springPosts = sortByDate(
+          posts.filter(p => p.theme?.toLowerCase().includes('spring'))
+        ).slice(0, 3);
 
-        this.gitPosts = posts
-          .filter(p => p.theme?.toLowerCase().includes('git'))
-          .slice(0, 3);
+        this.reactPosts = sortByDate(
+          posts.filter(p => p.theme?.toLowerCase().includes('react'))
+        ).slice(0, 3);
 
-        this.outrosPosts = posts
-          .filter(p => {
+        this.gitPosts = sortByDate(
+          posts.filter(p => p.theme?.toLowerCase().includes('git'))
+        ).slice(0, 3);
+
+        this.outrosPosts = sortByDate(
+          posts.filter(p => {
             const theme = p.theme?.toLowerCase() ?? '';
             return !theme.includes('angular') &&
                    !theme.includes('spring') &&
                    !theme.includes('react') &&
                    !theme.includes('git');
           })
-          .slice(0, 3);
+        ).slice(0, 3);
       },
       error: (erro) => {
         console.error('Erro ao carregar posts:', erro);

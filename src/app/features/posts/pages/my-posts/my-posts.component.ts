@@ -83,7 +83,6 @@ export class MyPostsComponent implements OnInit, OnDestroy {
     const sub = this.postService.delete(this.postToDelete.id).subscribe({
       next: () => {
         this.toastService.success('Post excluído com sucesso');
-        // Atualizar a lista de posts
         this.myPosts = this.myPosts.filter(p => p.id !== this.postToDelete!.id);
         this.postToDelete = null;
         this.showDeleteDialog = false;

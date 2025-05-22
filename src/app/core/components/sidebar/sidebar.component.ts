@@ -131,6 +131,18 @@ import { Subscription } from 'rxjs';
             <span *ngIf="!isCollapsed">Meus Posts</span>
           </a>
 
+          <a *ngIf="isAuthenticated" routerLink="/posts/new" routerLinkActive="bg-blue-50 text-blue-600"
+            class="flex items-center py-2 rounded-md text-sm font-medium text-gray-700 hover:bg-blue-50 hover:text-blue-700 transition-colors"
+            [class.px-3]="!isCollapsed"
+            [class.justify-center]="isCollapsed"
+            [class.px-1]="isCollapsed"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 flex-shrink-0" [ngClass]="{'mx-auto': isCollapsed, 'mr-3': !isCollapsed}" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+            </svg>
+            <span *ngIf="!isCollapsed">Novo Post</span>
+          </a>
+
           <a routerLink="/analytics" routerLinkActive="bg-blue-50 text-blue-600"
             class="flex items-center py-2 rounded-md text-sm font-medium text-gray-700 hover:bg-blue-50 hover:text-blue-700 transition-colors"
             [class.px-3]="!isCollapsed"

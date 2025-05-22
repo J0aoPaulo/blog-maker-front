@@ -65,7 +65,6 @@ export class PostCardComponent implements OnInit {
     this.svc.delete(this.post.id).subscribe({
       next: () => {
         this.toastService.success('Post excluído com sucesso');
-        // recarrega rota atual
         this.router.navigateByUrl('/posts', { skipLocationChange: true })
           .then(() => this.router.navigate(['/posts']));
       },
